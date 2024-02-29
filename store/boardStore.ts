@@ -1,24 +1,28 @@
-import { File } from "@/lib/db/services";
-import { Note } from "@/lib/db/services";
 import { create } from "zustand";
 
 interface BoardState {
+  user: UserType;
   file: FileType;
   notes: NoteType[];
+  todolist: TodolistType;
+  todoitems: TodoitemType[];
 
-  getLatestBoardDataByUserId: (userId: string) => Promise<void>;
+  setUser: (user: UserType) => void;
   setFile: (file: FileType) => void;
   setNotes: (notes: NoteType[]) => void;
+  setTodolist: (todolist: TodolistType) => void;
+  setTodoitems: (todoitems: TodoitemType[]) => void;
 }
 
 export const useBoardStore = create<BoardState>((set) => ({
-  file: { name: "", date: "", finished: false, user: "" },
-  notes: [{ file: "", value: "" }],
+  user: { name: "", image: "", accountId: "" },
+  file: { name: "", date: "", finished: false, userId: "" },
+  notes: [],
+  todolist: { fileId: "", visible: false },
+  todoitems: [],
 
-  getLatestBoardDataByUserId: async (userId: string): Promise<void> => {
-    const file = await File.getLatestFileByUserId(userId);
-    const notes = await Note.getNotesByFileId(file.res[0].$id!);
-    set({ file: file.res[0], notes: notes.res });
+  setUser: (user: UserType) => {
+    set({ user: user });
   },
 
   setFile: (file: FileType) => {
@@ -27,5 +31,13 @@ export const useBoardStore = create<BoardState>((set) => ({
 
   setNotes: (notes: NoteType[]) => {
     set({ notes: notes });
+  },
+
+  setTodolist: (todolist: TodolistType) => {
+    set({ todolist: todolist });
+  },
+
+  setTodoitems: (todoitems: TodoitemType[]) => {
+    set({ todoitems: todoitems });
   },
 }));

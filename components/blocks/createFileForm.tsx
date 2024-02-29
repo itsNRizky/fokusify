@@ -14,7 +14,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { File } from "@/lib/db/services";
+import { File, Todolist } from "@/lib/db/services";
 
 const fileFormSchema = z.object({
   name: z
@@ -29,9 +29,10 @@ export type FileFormType = z.infer<typeof fileFormSchema>;
 
 type Props = {
   className: string;
+  userId: string;
 };
 
-const CreateFileForm: FC<Props> = ({ className }) => {
+const CreateFileForm: FC<Props> = ({ className, userId }) => {
   const form = useForm<FileFormType>({
     resolver: zodResolver(fileFormSchema),
     defaultValues: {
@@ -43,11 +44,17 @@ const CreateFileForm: FC<Props> = ({ className }) => {
     const fileId = await File.createFile({
       name: data.name,
       date: new Date().toISOString(),
-      user: "iniUserBaru",
+      userId: userId,
       finished: false,
+    });
+    const todolistId = await Todolist.createTodolist({
+      visible: false,
+      fileId: fileId,
     });
     location.reload();
   };
+
+  // TODO: Create a button to add date inside the name input
 
   return (
     <Form {...form}>

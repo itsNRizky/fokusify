@@ -1,33 +1,29 @@
 import { Models, Query } from "appwrite";
 import { ID, databases } from "./appwrite";
 
-export const File = {
-  getFiles: async (): Promise<Models.Document[]> => {
-    const response = await databases.listDocuments(
-      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
-      process.env.NEXT_PUBLIC_APPWRITE_FILES_COLLECTION_ID!,
-    );
-    return response.documents;
-  },
-
-  getFileById: async ($id: string): Promise<Models.Document> => {
+export const Profile = {
+  getUserById: async ($id: string): Promise<ApprwriteResponse<UserType>> => {
     const response = await databases.getDocument(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
-      process.env.NEXT_PUBLIC_APPWRITE_FILES_COLLECTION_ID!,
+      process.env.NEXT_PUBLIC_APPWRITE_USERS_COLLECTION_ID!,
       $id,
     );
-    return response;
-  },
 
-  getFilesByUserId: async ($userId: string): Promise<Models.Document[]> => {
-    const response = await databases.listDocuments(
-      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
-      process.env.NEXT_PUBLIC_APPWRITE_FILES_COLLECTION_ID!,
-      [Query.equal("user", $userId)],
-    );
-    return response.documents;
+    return {
+      total: 1,
+      res: [
+        {
+          $id: response.$id,
+          name: response.name,
+          image: response.image,
+          accountId: response.accountId,
+        },
+      ],
+    };
   },
+};
 
+export const File = {
   getLatestFileByUserId: async (
     $userId: string,
   ): Promise<ApprwriteResponse<FileType>> => {
@@ -35,7 +31,7 @@ export const File = {
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
       process.env.NEXT_PUBLIC_APPWRITE_FILES_COLLECTION_ID!,
       [
-        Query.equal("user", $userId),
+        Query.equal("userId", $userId),
         Query.orderDesc("date"),
         Query.equal("finished", false),
         Query.limit(1),
@@ -47,7 +43,7 @@ export const File = {
         $id: file.$id,
         name: file.name,
         date: file.date,
-        user: file.user,
+        userId: file.userId,
         finished: file.finished,
       })),
     };
@@ -65,39 +61,22 @@ export const File = {
 };
 
 export const Note = {
-  getNotes: async (): Promise<Models.Document[]> => {
-    const response = await databases.listDocuments(
-      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
-      process.env.NEXT_PUBLIC_APPWRITE_NOTES_COLLECTION_ID!,
-    );
-    return response.documents;
-  },
-
   getNotesByFileId: async (
     $fileId: string,
   ): Promise<ApprwriteResponse<NoteType>> => {
     const response = await databases.listDocuments(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
       process.env.NEXT_PUBLIC_APPWRITE_NOTES_COLLECTION_ID!,
-      [Query.equal("file", $fileId)],
+      [Query.equal("fileId", $fileId)],
     );
     return {
       total: response.total,
       res: response.documents.map((note) => ({
         $id: note.$id,
-        file: note.file,
+        fileId: note.fileId,
         value: note.value,
       })),
     };
-  },
-
-  getNoteById: async ($id: string): Promise<Models.Document> => {
-    const response = await databases.getDocument(
-      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
-      process.env.NEXT_PUBLIC_APPWRITE_NOTES_COLLECTION_ID!,
-      $id,
-    );
-    return response;
   },
 
   createNote: async (note: NoteType): Promise<string> => {
@@ -126,6 +105,128 @@ export const Note = {
     await databases.deleteDocument(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
       process.env.NEXT_PUBLIC_APPWRITE_NOTES_COLLECTION_ID!,
+      $id,
+    );
+  },
+};
+
+export const Todolist = {
+  getTodolistByFileId: async (
+    $fileId: string,
+  ): Promise<ApprwriteResponse<TodolistType>> => {
+    const response = await databases.listDocuments(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+      process.env.NEXT_PUBLIC_APPWRITE_TODOLISTS_COLLECTION_ID!,
+      [Query.equal("fileId", $fileId)],
+    );
+    return {
+      total: response.total,
+      res: response.documents.map((todolist) => ({
+        $id: todolist.$id,
+        fileId: todolist.fileId,
+        visible: todolist.visible,
+      })),
+    };
+  },
+
+  createTodolist: async (todolist: TodolistType): Promise<string> => {
+    const response = await databases.createDocument(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+      process.env.NEXT_PUBLIC_APPWRITE_TODOLISTS_COLLECTION_ID!,
+      ID.unique(),
+      todolist,
+    );
+    return response.$id;
+  },
+
+  updateTodolist: async (todolist: TodolistType): Promise<string> => {
+    const response = await databases.updateDocument(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+      process.env.NEXT_PUBLIC_APPWRITE_TODOLISTS_COLLECTION_ID!,
+      todolist.$id!,
+    );
+    return response.$id;
+  },
+
+  setVisible: async (todolist: TodolistType): Promise<string> => {
+    const response = await databases.updateDocument(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+      process.env.NEXT_PUBLIC_APPWRITE_TODOLISTS_COLLECTION_ID!,
+      todolist.$id!,
+      {
+        visible: todolist.visible,
+      },
+    );
+    return response.$id;
+  },
+};
+
+export const Todoitem = {
+  getUnusedTodoitemsByUserId: async (
+    userId: string,
+  ): Promise<ApprwriteResponse<TodoitemType>> => {
+    const response = await databases.listDocuments(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+      process.env.NEXT_PUBLIC_APPWRITE_TODOITEMS_COLLECTION_ID!,
+      [Query.equal("userId", userId), Query.isNull("todolistId")],
+    );
+
+    return {
+      total: response.total,
+      res: response.documents.map((todoitem) => ({
+        $id: todoitem.$id,
+        todolistId: todoitem.todolistId,
+        value: todoitem.value,
+        finished: todoitem.finished,
+        userId: todoitem.userId,
+      })),
+    };
+  },
+
+  getTodoitemsByTodolistId: async (
+    $todolistId: string,
+  ): Promise<ApprwriteResponse<TodoitemType>> => {
+    const response = await databases.listDocuments(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+      process.env.NEXT_PUBLIC_APPWRITE_TODOITEMS_COLLECTION_ID!,
+      [Query.equal("todolistId", $todolistId)],
+    );
+    return {
+      total: response.total,
+      res: response.documents.map((todoitem) => ({
+        $id: todoitem.$id,
+        todolistId: todoitem.todolistId,
+        value: todoitem.value,
+        finished: todoitem.finished,
+        userId: todoitem.userId,
+      })),
+    };
+  },
+
+  createTodoitem: async (todoitem: TodoitemType): Promise<string> => {
+    const response = await databases.createDocument(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+      process.env.NEXT_PUBLIC_APPWRITE_TODOITEMS_COLLECTION_ID!,
+      ID.unique(),
+      todoitem,
+    );
+    return response.$id;
+  },
+
+  updateTodoitem: async (todoitem: TodoitemType): Promise<string> => {
+    const response = await databases.updateDocument(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+      process.env.NEXT_PUBLIC_APPWRITE_TODOITEMS_COLLECTION_ID!,
+      todoitem.$id!,
+      todoitem,
+    );
+    return response.$id;
+  },
+
+  deleteTodoitem: async ($id: string): Promise<void> => {
+    const response = await databases.deleteDocument(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+      process.env.NEXT_PUBLIC_APPWRITE_TODOITEMS_COLLECTION_ID!,
       $id,
     );
   },

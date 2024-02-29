@@ -1,15 +1,42 @@
+type AccountType = {
+  $id?: string;
+  email: string;
+  password: string;
+};
+
+type UserType = {
+  $id?: string;
+  name: string;
+  image?: string;
+  accountId: string;
+};
+
 type FileType = {
   $id?: string;
   name: string;
   date: string;
-  user: string;
   finished: boolean;
+  userId: string;
 };
 
 type NoteType = {
   $id?: string;
-  file: string;
   value: string;
+  fileId: string;
+};
+
+type TodolistType = {
+  $id?: string;
+  visible: boolean;
+  fileId: string;
+};
+
+type TodoitemType = {
+  $id?: string;
+  value: string;
+  finished: boolean;
+  todolistId: string;
+  userId: string;
 };
 
 type ApprwriteResponse<T> = {

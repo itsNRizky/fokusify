@@ -33,9 +33,14 @@ const NoteCard: FC<Props> = ({ draggableId, note, className }) => {
     }
   };
   return (
-    <DraggableCard className={`${className} w-60`} draggableId={draggableId}>
+    <DraggableCard
+      className={`${className} w-60`}
+      key={note.$id}
+      draggableId={draggableId}
+    >
       <div className="flex items-center justify-between">
-        <h2>{note.$id}</h2>
+        <h3 className="font-bold">Note</h3>
+        <div className="w-3/4"></div>
         <DeleteNoteButton noteId={note.$id!} />
       </div>
       <Textarea

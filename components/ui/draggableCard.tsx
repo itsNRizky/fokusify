@@ -3,7 +3,7 @@ import { useDndMonitor, useDraggable } from "@dnd-kit/core";
 import React, { FC, useState } from "react";
 import { Coordinates } from "@dnd-kit/utilities";
 import { Card, CardContent, CardHeader } from "../ui/card";
-import { FaGripLines } from "react-icons/fa";
+import { IoRemoveOutline } from "react-icons/io5";
 
 type Props = {
   children: React.ReactNode;
@@ -44,14 +44,14 @@ const DraggableCard: FC<Props> = ({ children, draggableId, className }) => {
       }
       ref={setNodeRef}
     >
-      <div
-        className="flex w-full cursor-grab justify-center px-3 active:cursor-grabbing"
-        {...listeners}
-        {...attributes}
-      >
-        <FaGripLines className="h-5 w-5" />
-      </div>
-      <CardContent className="">{children}</CardContent>
+      <CardContent className="">
+        <div
+          className="absolute flex h-8 w-3/4 cursor-grab justify-center px-3 active:cursor-grabbing"
+          {...listeners}
+          {...attributes}
+        ></div>
+        {children}
+      </CardContent>
     </Card>
   );
 };

@@ -9,15 +9,18 @@ import {
   TouchSensor,
 } from "@dnd-kit/core";
 import { restrictToParentElement } from "@dnd-kit/modifiers";
-import TesCard from "./tesCard";
 import { useBoardStore } from "@/store/boardStore";
 import NoteCard from "./noteCard";
+import TodolistCard from "./todolistCard";
 
 type Props = {
   className?: string;
   activationConstraint?: PointerActivationConstraint;
   fileProp: FileType;
   notesProp: NoteType[];
+  todolistProp: TodolistType;
+  todoitemsProp: TodoitemType[];
+  userProp: UserType;
 };
 
 const Board: FC<Props> = ({
@@ -25,6 +28,9 @@ const Board: FC<Props> = ({
   className,
   fileProp,
   notesProp,
+  todolistProp,
+  todoitemsProp,
+  userProp,
 }) => {
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint,
@@ -32,23 +38,50 @@ const Board: FC<Props> = ({
   const touchSensor = useSensor(TouchSensor, { activationConstraint });
   const sensors = useSensors(mouseSensor, touchSensor);
 
-  const [file, notes, getLatestBoardDataByUserId, setFile, setNotes] =
-    useBoardStore((state) => [
-      state.file,
-      state.notes,
-      state.getLatestBoardDataByUserId,
-      state.setFile,
-      state.setNotes,
-    ]);
+  const [
+    file,
+    notes,
+    todolist,
+    todoitems,
+    setFile,
+    setNotes,
+    setTodolist,
+    setTodoitems,
+    setUser,
+  ] = useBoardStore((state) => [
+    state.file,
+    state.notes,
+    state.todolist,
+    state.todoitems,
+    state.setFile,
+    state.setNotes,
+    state.setTodolist,
+    state.setTodoitems,
+    state.setUser,
+  ]);
 
   useEffect(() => {
     try {
       setFile(fileProp);
       setNotes(notesProp);
+      setTodolist(todolistProp);
+      setTodoitems(todoitemsProp);
+      setUser(userProp);
     } catch (err) {
       console.error(err);
     }
-  }, [setFile, setNotes, fileProp, notesProp]);
+  }, [
+    setFile,
+    setNotes,
+    setTodolist,
+    setTodoitems,
+    setUser,
+    fileProp,
+    notesProp,
+    todolistProp,
+    todoitemsProp,
+    userProp,
+  ]);
 
   return (
     <DndContext sensors={sensors} modifiers={[restrictToParentElement]}>
@@ -62,6 +95,7 @@ const Board: FC<Props> = ({
               note={note}
             />
           ))}
+        <TodolistCard todoitems={todoitems} todolist={todolist} />
       </div>
     </DndContext>
   );

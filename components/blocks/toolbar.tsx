@@ -12,6 +12,7 @@ import { FaRegNoteSticky, FaRegRectangleList } from "react-icons/fa6";
 import { GoStopwatch } from "react-icons/go";
 import { HiOutlineChatBubbleBottomCenterText } from "react-icons/hi2";
 import AddNoteButton from "./addNoteButton";
+import ToggleTodolistButton from "./toggleTodolistButton";
 
 type Props = {};
 
@@ -20,14 +21,7 @@ const Toolbar = (props: Props) => {
     <nav>
       <ul className="flex h-10 items-center gap-3 rounded-md bg-primary p-2 text-primary-foreground">
         <li>
-          <HoverCard>
-            <HoverCardTrigger asChild>
-              <AddNoteButton />
-            </HoverCardTrigger>
-            <HoverCardContent>
-              <p className="text-black">Note</p>
-            </HoverCardContent>
-          </HoverCard>
+          <AddNoteButton />
         </li>
         <Separator orientation="vertical" />
         <li>
@@ -44,16 +38,7 @@ const Toolbar = (props: Props) => {
         </li>
         <Separator orientation="vertical" />
         <li>
-          <HoverCard>
-            <HoverCardTrigger asChild>
-              <Button size={"icon"}>
-                <FaRegRectangleList />
-              </Button>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              <p className="text-black">Todolist</p>
-            </HoverCardContent>
-          </HoverCard>
+          <ToggleTodolistButton />
         </li>
         <Separator orientation="vertical" />
         <li>

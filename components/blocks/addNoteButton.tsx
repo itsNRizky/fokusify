@@ -19,11 +19,11 @@ const AddNoteButton: FC<Props> = (props: Props) => {
   ]);
   const addNoteHandler = async () => {
     const newNote: NoteType = {
-      file: file.$id!,
+      fileId: file.$id!,
       value: "",
     };
     const id = await Note.createNote(newNote);
-    setNotes([...notes, { $id: id, file: file.$id!, value: "" }]);
+    setNotes([...notes, { $id: id, fileId: file.$id!, value: "" }]);
   };
   return (
     <HoverCard>
