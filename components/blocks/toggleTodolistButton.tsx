@@ -6,7 +6,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@radix-ui/react-hover-card";
+} from "../ui/hover-card";
 import { FaRegRectangleList } from "react-icons/fa6";
 
 type Props = {};
@@ -19,7 +19,6 @@ const ToggleTodolistButton = (props: Props) => {
 
   const toggleHandler = async () => {
     const newVisible = todolist.visible ? false : true;
-    console.log(newVisible);
     await Todolist.setVisible({ ...todolist, visible: newVisible });
     setTodolist({ ...todolist, visible: newVisible });
   };

@@ -32,7 +32,7 @@ const CreateTodoitemForm: FC<Props> = () => {
     Todoitem.getUnusedTodoitemsByUserId(user.$id!).then((res) => {
       setUnusedTodoItems(res.res);
     });
-  }, []);
+  }, [user.$id]);
 
   const addTodoitemHandler = async () => {
     if (!inputTodoItem) {
@@ -104,7 +104,7 @@ const CreateTodoitemForm: FC<Props> = () => {
               </Button>
             </div>
             <CommandList>
-              <CommandGroup heading="Or choose existing Tasks">
+              <CommandGroup heading="Or choose unfinished Tasks">
                 {unusedTodoitems.length === 0 && (
                   <CommandItem>No Task Found</CommandItem>
                 )}

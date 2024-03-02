@@ -7,6 +7,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import TodoitemCard from "./todoitemCard";
 import { useBoardStore } from "@/store/boardStore";
 import CreateTodoitemForm from "./createTodoitemForm";
+import { Todolist } from "@/lib/db/services";
 
 type Props = {
   todolist: TodolistType;
@@ -17,7 +18,8 @@ type Props = {
 const TodolistCard: FC<Props> = ({ todolist, todoitems, className }) => {
   const [setTodolist] = useBoardStore((state) => [state.setTodolist]);
 
-  const visibleHandler = () => {
+  const visibleHandler = async () => {
+    await Todolist.setVisible({ ...todolist, visible: !todolist.visible });
     setTodolist({ ...todolist, visible: !todolist.visible });
   };
 
