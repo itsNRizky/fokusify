@@ -43,3 +43,10 @@ type ApprwriteResponse<T> = {
   total: number;
   res: T[];
 };
+
+declare module "*.mp3" {
+  const content: string;
+  export default content;
+}
+
+declare module "use-sound";

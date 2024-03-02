@@ -6,12 +6,14 @@ interface BoardState {
   notes: NoteType[];
   todolist: TodolistType;
   todoitems: TodoitemType[];
+  showPomodoro: boolean;
 
   setUser: (user: UserType) => void;
   setFile: (file: FileType) => void;
   setNotes: (notes: NoteType[]) => void;
   setTodolist: (todolist: TodolistType) => void;
   setTodoitems: (todoitems: TodoitemType[]) => void;
+  setShowPomodoro: (showPomodoro: boolean) => void;
 }
 
 export const useBoardStore = create<BoardState>((set) => ({
@@ -20,6 +22,7 @@ export const useBoardStore = create<BoardState>((set) => ({
   notes: [],
   todolist: { fileId: "", visible: false },
   todoitems: [],
+  showPomodoro: false,
 
   setUser: (user: UserType) => {
     set({ user: user });
@@ -39,5 +42,9 @@ export const useBoardStore = create<BoardState>((set) => ({
 
   setTodoitems: (todoitems: TodoitemType[]) => {
     set({ todoitems: todoitems });
+  },
+
+  setShowPomodoro: (showPomodoro: boolean) => {
+    set({ showPomodoro: showPomodoro });
   },
 }));

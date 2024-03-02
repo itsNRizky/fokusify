@@ -13,6 +13,7 @@ import { GoStopwatch } from "react-icons/go";
 import { HiOutlineChatBubbleBottomCenterText } from "react-icons/hi2";
 import AddNoteButton from "./addNoteButton";
 import ToggleTodolistButton from "./toggleTodolistButton";
+import TogglePomodoroButton from "./togglePomodoroButton";
 
 type Props = {};
 
@@ -25,16 +26,7 @@ const Toolbar = (props: Props) => {
         </li>
         <Separator orientation="vertical" />
         <li>
-          <HoverCard>
-            <HoverCardTrigger asChild>
-              <Button size={"icon"}>
-                <GoStopwatch />
-              </Button>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              <p className="text-black">Pomodoro/Flowmodoro</p>
-            </HoverCardContent>
-          </HoverCard>
+          <TogglePomodoroButton />
         </li>
         <Separator orientation="vertical" />
         <li>
