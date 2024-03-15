@@ -4,6 +4,7 @@ import FooterApp from "@/components/blocks/footerApp";
 import Board from "@/components/blocks/board";
 import { File, Note, Todoitem, Todolist } from "@/lib/db/services";
 import CreateFileForm from "@/components/blocks/createFileForm";
+import { Toaster } from "@/components/ui/sonner";
 
 type Props = {};
 
@@ -33,6 +34,7 @@ const App = async (props: Props) => {
             // TODO: Login session for userId
             userProp={user}
           />
+          <Toaster />
           <FooterApp className="fixed bottom-0 w-screen" />
         </>
       );

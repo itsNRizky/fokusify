@@ -4,6 +4,12 @@ type AccountType = {
   password: string;
 };
 
+type AccountType = {
+  $id?: string;
+  email: string;
+  password: string;
+};
+
 type UserType = {
   $id?: string;
   name: string;
@@ -37,6 +43,13 @@ type TodoitemType = {
   finished: boolean;
   todolistId: string;
   userId: string;
+};
+
+type MessageType = {
+  $id?: string;
+  fileId: string;
+  userId: string;
+  value: string;
 };
 
 type ApprwriteResponse<T> = {

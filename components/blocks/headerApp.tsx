@@ -29,7 +29,11 @@ const HeaderApp: FC<Props> = (props: Props) => {
             </Button>
           </li>
           <li>
-            <Button size={"icon"} className="rounded-full">
+            <Button
+              onClick={() => alert("halo")}
+              size={"icon"}
+              className="rounded-full"
+            >
               <Avatar>
                 <AvatarFallback>NR</AvatarFallback>
               </Avatar>
