@@ -7,6 +7,7 @@ interface BoardState {
   todolist: TodolistType;
   todoitems: TodoitemType[];
   showPomodoro: boolean;
+  showYoutube: boolean;
 
   setUser: (user: UserType) => void;
   setFile: (file: FileType) => void;
@@ -14,6 +15,7 @@ interface BoardState {
   setTodolist: (todolist: TodolistType) => void;
   setTodoitems: (todoitems: TodoitemType[]) => void;
   setShowPomodoro: (showPomodoro: boolean) => void;
+  setShowYoutube: (showYoutube: boolean) => void;
 }
 
 export const useBoardStore = create<BoardState>((set) => ({
@@ -23,6 +25,7 @@ export const useBoardStore = create<BoardState>((set) => ({
   todolist: { fileId: "", visible: false },
   todoitems: [],
   showPomodoro: false,
+  showYoutube: false,
 
   setUser: (user: UserType) => {
     set({ user: user });
@@ -46,5 +49,9 @@ export const useBoardStore = create<BoardState>((set) => ({
 
   setShowPomodoro: (showPomodoro: boolean) => {
     set({ showPomodoro: showPomodoro });
+  },
+
+  setShowYoutube: (showYoutube: boolean) => {
+    set({ showYoutube: showYoutube });
   },
 }));

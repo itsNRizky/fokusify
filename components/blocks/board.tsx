@@ -13,6 +13,7 @@ import { useBoardStore } from "@/store/boardStore";
 import NoteCard from "./noteCard";
 import TodolistCard from "./todolistCard";
 import PomodoroCard from "./pomodoroCard";
+import YoutubeCard from "./youtubeCard";
 
 type Props = {
   className?: string;
@@ -98,6 +99,7 @@ const Board: FC<Props> = ({
           ))}
         <TodolistCard todoitems={todoitems} todolist={todolist} />
         <PomodoroCard />
+        <YoutubeCard />
       </div>
     </DndContext>
   );

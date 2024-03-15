@@ -14,6 +14,8 @@ import { HiOutlineChatBubbleBottomCenterText } from "react-icons/hi2";
 import AddNoteButton from "./addNoteButton";
 import ToggleTodolistButton from "./toggleTodolistButton";
 import TogglePomodoroButton from "./togglePomodoroButton";
+import ToggleMessage from "./toggleMessage";
+import ToggleYoutubeButton from "./toggleYoutubeButton";
 
 type Props = {};
 
@@ -34,16 +36,11 @@ const Toolbar = (props: Props) => {
         </li>
         <Separator orientation="vertical" />
         <li>
-          <HoverCard>
-            <HoverCardTrigger asChild>
-              <Button size={"icon"}>
-                <HiOutlineChatBubbleBottomCenterText />
-              </Button>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              <p className="text-black">Message</p>
-            </HoverCardContent>
-          </HoverCard>
+          <ToggleYoutubeButton />
+        </li>
+        <Separator orientation="vertical" />
+        <li>
+          <ToggleMessage />
         </li>
       </ul>
     </nav>
