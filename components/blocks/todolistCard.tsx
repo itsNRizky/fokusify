@@ -3,7 +3,7 @@ import DraggableCard from "../ui/draggableCard";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { FaPlus } from "react-icons/fa6";
-import { IoCloseOutline } from "react-icons/io5";
+import { IoRemoveOutline } from "react-icons/io5";
 import TodoitemCard from "./todoitemCard";
 import { useBoardStore } from "@/store/boardStore";
 import CreateTodoitemForm from "./createTodoitemForm";
@@ -33,7 +33,7 @@ const TodolistCard: FC<Props> = ({ todolist, todoitems, className }) => {
         <h3 className="font-bold">Todolist</h3>
         <div className="w-3/4"></div>
         <Button onClick={visibleHandler} size={"icon"} variant={"link"}>
-          <IoCloseOutline className="h-6 w-6" />
+          <IoRemoveOutline className="h-6 w-6" />
         </Button>
       </div>
       <ul className="mb-3 flex flex-col gap-1">
