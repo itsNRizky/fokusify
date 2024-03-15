@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import DraggableCard from "../ui/draggableCard";
 import { Button } from "../ui/button";
-import { IoCloseOutline, IoPlayOutline, IoPauseOutline } from "react-icons/io5";
+
+import {
+  IoRemoveOutline,
+  IoPlayOutline,
+  IoPauseOutline,
+  IoSettingsOutline,
+} from "react-icons/io5";
 import { LuTimerReset } from "react-icons/lu";
 import { FaCheck } from "react-icons/fa6";
 import {
@@ -15,11 +21,9 @@ import { useBoardStore } from "@/store/boardStore";
 import { Todoitem } from "@/lib/db/services";
 import FinishedPomodoroModal from "./finishedPomodoroModal";
 import useSound from "use-sound";
+import SetPomodoroTImerForm from "./setPomodoroTImerForm";
 
 type Props = {};
-
-const workTime = 10;
-const breakTime = 5;
 
 const PomodoroCard = (props: Props) => {
   const [todoitems, showPomodoro, setTodoitems, setShowPomodoro] =
@@ -29,14 +33,17 @@ const PomodoroCard = (props: Props) => {
       state.setTodoitems,
       state.setShowPomodoro,
     ]);
+
   const [selectedItem, setSelectedItem] = React.useState<string>();
   const [isRunning, setIsRunning] = React.useState<boolean>(false);
   const [isPaused, setIsPaused] = React.useState<boolean>(false);
+  const [workTime, setWorkTime] = React.useState<number>(25 * 60);
+  const [breakTime, setBreakTime] = React.useState<number>(5 * 60);
   const [timeLeft, setTimeLeft] = React.useState<number>(workTime);
   const [status, setStatus] = React.useState<string>("Work");
   const [isFinishedSession, setIsFinishedSession] = useState<boolean>(false);
   const [play, { stop }] = useSound("/sounds/kriing.mp3", {
-    volume: 0.5,
+    volume: 2,
     loop: true,
     playbackRate: 1.5,
   });
@@ -63,6 +70,7 @@ const PomodoroCard = (props: Props) => {
   };
 
   const finishTask = async () => {
+    playClick();
     if (!selectedItem) {
       return;
     }
@@ -86,7 +94,6 @@ const PomodoroCard = (props: Props) => {
     );
     setIsRunning(false);
     setIsPaused(false);
-    setTimeLeft(workTime);
   };
 
   const updateTime = (interval: NodeJS.Timeout) => {
@@ -110,7 +117,7 @@ const PomodoroCard = (props: Props) => {
   };
 
   const visibleHandler = () => {
-    setShowPomodoro(showPomodoro);
+    setShowPomodoro(!showPomodoro);
   };
 
   useEffect(() => {
@@ -133,9 +140,17 @@ const PomodoroCard = (props: Props) => {
     >
       <div className="-mb-3 flex items-center justify-between">
         <p className="text-sm text-zinc-500">Current Task</p>
-        <Button onClick={visibleHandler} size={"icon"} variant={"link"}>
-          <IoCloseOutline className="h-6 w-6" />
-        </Button>
+        <div className="flex items-center gap-2">
+          <SetPomodoroTImerForm
+            breakTimer={breakTime}
+            workTimer={workTime}
+            setWorkTImer={setWorkTime}
+            setBreakTimer={setBreakTime}
+          />
+          <Button onClick={visibleHandler} size={"icon"} variant={"link"}>
+            <IoRemoveOutline className="h-6 w-6" />
+          </Button>
+        </div>
       </div>
       <div>
         <Select

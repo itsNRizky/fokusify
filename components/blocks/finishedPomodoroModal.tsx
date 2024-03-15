@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,6 +8,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../ui/alert-dialog";
+import { Message } from "@/lib/db/services";
+import { useBoardStore } from "@/store/boardStore";
 
 type Props = {
   isShown: boolean;
@@ -16,16 +18,35 @@ type Props = {
   stopSound: () => void;
 };
 
+type MessageOwnerType = {
+  value: string;
+  user: string;
+};
+
 const FinishedPomodoroModal: FC<Props> = ({
   isShown,
   status,
   handler,
   stopSound,
 }) => {
+  const [file] = useBoardStore((state) => [state.file]);
+  const [message, setMessage] = useState<MessageOwnerType>({
+    user: "",
+    value: "",
+  });
   const stopHandler = () => {
     handler(false);
     stopSound();
   };
+
+  useEffect(() => {
+    Message.getOneRandomMessage(file.userId).then((res) => {
+      setMessage({
+        user: res.res[0].userId,
+        value: res.res[0].value,
+      });
+    });
+  }, [status]);
   return (
     <AlertDialog open={isShown}>
       <AlertDialogContent>
@@ -38,8 +59,8 @@ const FinishedPomodoroModal: FC<Props> = ({
             what you put on your mind! Here is a note from another user:
           </AlertDialogDescription>
           <AlertDialogDescription>
-            `Good luck kalian semuaa!! Pasti bisa lebih GEGE`
-            <p>-Nama User </p>
+            {`"${message.value}"`}
+            <p>-{message.user}</p>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
