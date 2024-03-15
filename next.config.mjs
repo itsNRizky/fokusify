@@ -13,6 +13,8 @@ const nextConfig = {
         },
       },
     });
+    // Make sure to return the modified config
+    return config;
   },
 };
 
