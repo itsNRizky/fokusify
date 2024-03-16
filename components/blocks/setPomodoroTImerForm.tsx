@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import { LuTimerReset } from "react-icons/lu";
 
 type Props = {
   workTimer: number;
@@ -47,7 +48,13 @@ const SetPomodoroTImerForm: React.FC<Props> = ({
             onChange={(e) => setBreakTimer(Number(e.target.value))}
           />
         </div>
-        <p>Click reset timer to save update</p>
+        <p className="flex items-center gap-2">
+          Click{" "}
+          <i>
+            <LuTimerReset />
+          </i>{" "}
+          to save update
+        </p>
       </PopoverContent>
     </Popover>
   );

@@ -27,6 +27,7 @@ const CreateTodoitemForm: FC<Props> = () => {
   ]);
   const [unusedTodoitems, setUnusedTodoItems] = useState<TodoitemType[]>([]);
   const [inputTodoItem, setInputTodoItem] = useState<string>("");
+  const [isPending, setIsPending] = useState<boolean>(false);
 
   useEffect(() => {
     Todoitem.getUnusedTodoitemsByUserId(user.$id!).then((res) => {
@@ -39,6 +40,7 @@ const CreateTodoitemForm: FC<Props> = () => {
       return;
     }
 
+    setIsPending(true);
     const $id = await Todoitem.createTodoitem({
       value: inputTodoItem,
       todolistId: todolist.$id!,
@@ -56,6 +58,7 @@ const CreateTodoitemForm: FC<Props> = () => {
         userId: user.$id!,
       },
     ]);
+    setIsPending(false);
   };
 
   const moveTodoitemHandler = async ($id: string, todoitemValue: string) => {
@@ -99,7 +102,11 @@ const CreateTodoitemForm: FC<Props> = () => {
                 value={inputTodoItem}
                 onInput={(e) => setInputTodoItem(e.currentTarget.value)}
               />
-              <Button className="" onClick={addTodoitemHandler}>
+              <Button
+                disabled={isPending}
+                className=""
+                onClick={addTodoitemHandler}
+              >
                 <FaPlus />
               </Button>
             </div>

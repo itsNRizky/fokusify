@@ -17,7 +17,8 @@ const TodoitemCard: FC<Props> = ({ todoitem }) => {
   const [checked, setChecked] = useState<boolean>(false);
 
   const removeTodoitemHandler = async () => {
-    await Todoitem.deleteTodoitem(todoitem.$id!);
+    // TODO: Autosave delete todoitem
+    // await Todoitem.deleteTodoitem(todoitem.$id!);
     setTodoitems(todoitems.filter((item) => item.$id !== todoitem.$id));
   };
 
@@ -39,7 +40,8 @@ const TodoitemCard: FC<Props> = ({ todoitem }) => {
         }
       }),
     );
-    await Todoitem.updateTodoitem(finishedTodoitem);
+    // TODO: Autosave set finished
+    // await Todoitem.updateTodoitem(finishedTodoitem);
   };
   return (
     <li key={todoitem.$id} className="flex items-center justify-between gap-3">

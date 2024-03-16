@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { Button } from "../ui/button";
 import {
   HoverCard,
@@ -12,6 +12,7 @@ import { Note } from "@/lib/db/services";
 type Props = {};
 
 const AddNoteButton: FC<Props> = (props: Props) => {
+  const [isPending, setIsPending] = useState(false);
   const [file, notes, setNotes] = useBoardStore((state) => [
     state.file,
     state.notes,
@@ -22,13 +23,16 @@ const AddNoteButton: FC<Props> = (props: Props) => {
       fileId: file.$id!,
       value: "",
     };
+    setIsPending(true);
     const id = await Note.createNote(newNote);
+
     setNotes([...notes, { $id: id, fileId: file.$id!, value: "" }]);
+    setIsPending(false);
   };
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Button onClick={addNoteHandler} size={"icon"}>
+        <Button disabled={isPending} onClick={addNoteHandler} size={"icon"}>
           <FaRegNoteSticky />
         </Button>
       </HoverCardTrigger>

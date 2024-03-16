@@ -76,10 +76,11 @@ const PomodoroCard = (props: Props) => {
     }
 
     const theItem = todoitems.find((item) => item.$id === selectedItem);
-    await Todoitem.updateTodoitem({
-      ...theItem!,
-      finished: true,
-    });
+    // TODO: Autosave set finished todoitem
+    // await Todoitem.updateTodoitem({
+    //   ...theItem!,
+    //   finished: true,
+    // });
     setTodoitems(
       todoitems.map((todoitem) => {
         if (todoitem.$id === selectedItem) {

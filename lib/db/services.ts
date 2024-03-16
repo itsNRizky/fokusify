@@ -126,7 +126,7 @@ export const Note = {
     const response = await databases.createDocument(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
       process.env.NEXT_PUBLIC_APPWRITE_NOTES_COLLECTION_ID!,
-      ID.unique(),
+      "jri38djeijlvmbeisje3",
       note,
     );
     return response.$id;

@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   DndContext,
   MouseSensor,
@@ -14,6 +14,9 @@ import NoteCard from "./noteCard";
 import TodolistCard from "./todolistCard";
 import PomodoroCard from "./pomodoroCard";
 import YoutubeCard from "./youtubeCard";
+import { Note, Todoitem, Todolist } from "@/lib/db/services";
+import { toast } from "sonner";
+import { saveBoardToDatabaseHandler } from "@/lib/utils";
 
 type Props = {
   className?: string;
@@ -39,6 +42,7 @@ const Board: FC<Props> = ({
   });
   const touchSensor = useSensor(TouchSensor, { activationConstraint });
   const sensors = useSensors(mouseSensor, touchSensor);
+  const [isOpenWarning, setIsOpenWarning] = useState(false);
 
   const [
     file,
@@ -63,6 +67,22 @@ const Board: FC<Props> = ({
   ]);
 
   useEffect(() => {
+    function handleBeforeUnload(event: BeforeUnloadEvent) {
+      event.preventDefault();
+      return (event.returnValue = "");
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload, {
+      capture: true,
+    });
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload, {
+        capture: true,
+      });
+    };
+  });
+
+  useEffect(() => {
     try {
       setFile(fileProp);
       setNotes(notesProp);
@@ -85,6 +105,12 @@ const Board: FC<Props> = ({
     userProp,
   ]);
 
+  useKeyPress("s", async () => {
+    toast("Saving...");
+    await saveBoardToDatabaseHandler(notes, todolist, todoitems, file);
+    toast("Data saved");
+  });
+
   return (
     <DndContext sensors={sensors} modifiers={[restrictToParentElement]}>
       <div className={`${className}`}>
@@ -104,5 +130,19 @@ const Board: FC<Props> = ({
     </DndContext>
   );
 };
+
+function useKeyPress(key: string, callback: () => void) {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === key && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault(); // Prevent the default browser behavior
+        callback();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [key, callback]);
+}
 
 export default Board;

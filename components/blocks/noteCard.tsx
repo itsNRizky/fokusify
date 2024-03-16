@@ -21,7 +21,8 @@ const NoteCard: FC<Props> = ({ draggableId, note, className }) => {
   const [value, setValue] = useState<string>(note.value);
   const updateNoteHandler = async () => {
     if (value !== note.value) {
-      await Note.updateNote({ ...note, value: value });
+      // TODO: For autosave note
+      // await Note.updateNote({ ...note, value: value });
       setNotes(
         notes.map((n: NoteType) => {
           if (n.$id === note.$id) {

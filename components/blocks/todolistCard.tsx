@@ -19,7 +19,8 @@ const TodolistCard: FC<Props> = ({ todolist, todoitems, className }) => {
   const [setTodolist] = useBoardStore((state) => [state.setTodolist]);
 
   const visibleHandler = async () => {
-    await Todolist.setVisible({ ...todolist, visible: !todolist.visible });
+    // TODO: Autosave set visible
+    // await Todolist.setVisible({ ...todolist, visible: !todolist.visible });
     setTodolist({ ...todolist, visible: !todolist.visible });
   };
 

@@ -19,7 +19,8 @@ const ToggleTodolistButton = (props: Props) => {
 
   const toggleHandler = async () => {
     const newVisible = todolist.visible ? false : true;
-    await Todolist.setVisible({ ...todolist, visible: newVisible });
+    // TODO: Autosave set visible
+    // await Todolist.setVisible({ ...todolist, visible: newVisible });
     setTodolist({ ...todolist, visible: newVisible });
   };
 

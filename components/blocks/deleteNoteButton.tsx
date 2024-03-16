@@ -15,7 +15,8 @@ const DeleteNoteButton: FC<Props> = ({ noteId }) => {
   ]);
   const deleteNoteHandler = async () => {
     if (confirm("Are you sure you want to delete this note?")) {
-      await Note.deleteNote(noteId);
+      // TODO: For autosave delete note
+      // await Note.deleteNote(noteId);
       setNotes(notes.filter((note) => note.$id !== noteId));
     }
   };
