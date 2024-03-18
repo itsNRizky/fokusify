@@ -11,6 +11,15 @@ export const {
 } = NextAuth({
   adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
-  secret: process.env.AUTH_SECRET_KEY,
   ...authConfig,
+  callbacks: {
+    jwt: async ({ token, user }) => {
+      console.log(token);
+      return token;
+    },
+    session: async ({ session, token }) => {
+      console.log(session);
+      return session;
+    },
+  },
 });

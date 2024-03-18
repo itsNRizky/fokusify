@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { useForm } from "react-hook-form";
-import { loginFormSchema } from "@/schemas";
+import { registerFormSchema } from "@/schemas";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -19,34 +19,37 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { FaGoogle } from "react-icons/fa6";
 import { FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
-import { login } from "@/actions/login";
+import { register } from "@/actions/register";
 
 type Props = {};
 
-const LoginForm = (props: Props) => {
+const RegisterForm = (props: Props) => {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
-  const form = useForm<z.infer<typeof loginFormSchema>>({
-    resolver: zodResolver(loginFormSchema),
+  const form = useForm<z.infer<typeof registerFormSchema>>({
+    resolver: zodResolver(registerFormSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
   });
 
-  const submitHandler = async (data: z.infer<typeof loginFormSchema>) => {
-    const res = await login(data);
+  const submitHandler = async (data: z.infer<typeof registerFormSchema>) => {
+    const res = await register(data);
     if (res.success) {
       setSuccess(res.success);
+      form.reset();
     } else {
       setError(res.error!);
+      form.reset();
     }
   };
 
   return (
     <Card className="w-96">
       <CardHeader className="text-center">
-        <h1 className="text-2xl font-bold">Login to Fokusify</h1>
+        <h1 className="text-2xl font-bold">Register Fokusify Account</h1>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -54,6 +57,19 @@ const LoginForm = (props: Props) => {
             onSubmit={form.handleSubmit(submitHandler)}
             className="space-y-6"
           >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Your name here" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="email"
@@ -82,15 +98,15 @@ const LoginForm = (props: Props) => {
             />
             <LoginError error={error} />
             <LoginSuccess success={success} />
-            <Button className="w-full">Login</Button>
+            <Button className="w-full">Register</Button>
           </form>
         </Form>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <span className="text-sm">Don&apos;t have an account?</span>
-        <Link href="/register">
+        <span className="text-sm">Already have an account?</span>
+        <Link href="/login">
           <Button className="p-0" variant={"link"}>
-            Regist Here
+            Login Page
           </Button>
         </Link>
       </CardFooter>
@@ -127,4 +143,4 @@ const LoginSuccess = ({ success }: { success?: string }) => {
   }
 };
 
-export default LoginForm;
+export default RegisterForm;
