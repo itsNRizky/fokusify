@@ -2,15 +2,6 @@
 
 import React from "react";
 import { Separator } from "../ui/separator";
-import { Button } from "../ui/button";
-import {
-  HoverCard,
-  HoverCardTrigger,
-  HoverCardContent,
-} from "../ui/hover-card";
-import { FaRegNoteSticky, FaRegRectangleList } from "react-icons/fa6";
-import { GoStopwatch } from "react-icons/go";
-import { HiOutlineChatBubbleBottomCenterText } from "react-icons/hi2";
 import AddNoteButton from "./addNoteButton";
 import ToggleTodolistButton from "./toggleTodolistButton";
 import TogglePomodoroButton from "./togglePomodoroButton";

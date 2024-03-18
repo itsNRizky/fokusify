@@ -15,7 +15,7 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { fileFormSchema } from "@/schemas";
-import { create } from "@/actions/createFile";
+import { create } from "@/actions/file";
 
 type Props = {
   className: string;

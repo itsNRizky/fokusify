@@ -1,4 +1,3 @@
-"use client";
 import React, { FC } from "react";
 import { Button } from "../ui/button";
 import BottomSheet from "../ui/bottomSheet";
