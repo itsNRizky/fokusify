@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useTransition } from "react";
+import React, { FC, useEffect, useTransition } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -16,6 +16,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { fileFormSchema } from "@/schemas";
 import { create } from "@/actions/file";
+import { useBoardStore } from "@/store/boardStore";
 
 type Props = {
   className: string;
@@ -23,6 +24,27 @@ type Props = {
 };
 
 const CreateFileForm: FC<Props> = ({ className, userId }) => {
+  const [setFile, setNotes, setTodolist, setTodoitems] = useBoardStore(
+    (state) => [
+      state.setFile,
+      state.setNotes,
+      state.setTodolist,
+      state.setTodoitems,
+    ],
+  );
+  useEffect(() => {
+    setFile({
+      id: "",
+      name: "",
+      date: new Date(),
+      finished: false,
+      userId: "",
+    });
+    setNotes([]);
+    setTodolist({ id: "", visible: false, fileId: "" });
+    setTodoitems([]);
+  }, [setFile, setNotes, setTodolist, setTodoitems]);
+
   const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof fileFormSchema>>({
     resolver: zodResolver(fileFormSchema),

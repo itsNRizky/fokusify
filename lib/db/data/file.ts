@@ -58,4 +58,21 @@ export const File = {
       return null;
     }
   },
+
+  finish: async (id: string): Promise<FileType | null> => {
+    try {
+      const finishedFile = await db.file.update({
+        where: {
+          id,
+        },
+        data: {
+          finished: true,
+        },
+      });
+      return finishedFile;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  },
 };
