@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useTransition } from "react";
 import { Button } from "../ui/button";
 import {
   HoverCard,
@@ -7,27 +7,24 @@ import {
 } from "../ui/hover-card";
 import { FaRegNoteSticky } from "react-icons/fa6";
 import { useBoardStore } from "@/store/boardStore";
-import { Note } from "@/lib/db/services";
+import { Note } from "@/lib/db/data/note";
+import { type Note as NoteType } from "@prisma/client";
+import { create } from "@/actions/note";
 
 type Props = {};
 
 const AddNoteButton: FC<Props> = (props: Props) => {
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const [file, notes, setNotes] = useBoardStore((state) => [
     state.file,
     state.notes,
     state.setNotes,
   ]);
   const addNoteHandler = async () => {
-    const newNote: NoteType = {
-      fileId: file.$id!,
-      value: "",
-    };
-    setIsPending(true);
-    const id = await Note.createNote(newNote);
-
-    setNotes([...notes, { $id: id, fileId: file.$id!, value: "" }]);
-    setIsPending(false);
+    startTransition(async () => {
+      const createdNote = await create(file.id, "");
+      setNotes([...notes, createdNote as NoteType]);
+    });
   };
   return (
     <HoverCard>

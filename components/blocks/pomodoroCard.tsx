@@ -18,10 +18,10 @@ import {
   SelectItem,
 } from "../ui/select";
 import { useBoardStore } from "@/store/boardStore";
-import { Todoitem } from "@/lib/db/services";
 import FinishedPomodoroModal from "./finishedPomodoroModal";
 import useSound from "use-sound";
 import SetPomodoroTImerForm from "./setPomodoroTImerForm";
+import { update } from "@/actions/todoitem";
 
 type Props = {};
 
@@ -37,9 +37,9 @@ const PomodoroCard = (props: Props) => {
   const [selectedItem, setSelectedItem] = React.useState<string>();
   const [isRunning, setIsRunning] = React.useState<boolean>(false);
   const [isPaused, setIsPaused] = React.useState<boolean>(false);
-  const [workTime, setWorkTime] = React.useState<number>(25 * 60);
-  const [breakTime, setBreakTime] = React.useState<number>(5 * 60);
-  const [timeLeft, setTimeLeft] = React.useState<number>(workTime);
+  const [workTime, setWorkTime] = React.useState<number>(25);
+  const [breakTime, setBreakTime] = React.useState<number>(5);
+  const [timeLeft, setTimeLeft] = React.useState<number>(workTime * 60);
   const [status, setStatus] = React.useState<string>("Work");
   const [isFinishedSession, setIsFinishedSession] = useState<boolean>(false);
   const [play, { stop }] = useSound("/sounds/kriing.mp3", {
@@ -66,7 +66,7 @@ const PomodoroCard = (props: Props) => {
     setIsRunning(false);
     setIsPaused(false);
     setStatus("Work");
-    setTimeLeft(workTime);
+    setTimeLeft(workTime * 60);
   };
 
   const finishTask = async () => {
@@ -75,15 +75,22 @@ const PomodoroCard = (props: Props) => {
       return;
     }
 
-    const theItem = todoitems.find((item) => item.$id === selectedItem);
+    const theItem = todoitems.find((item) => item.id === selectedItem);
     // TODO: Autosave set finished todoitem
+    await update(
+      theItem?.id!,
+      theItem?.value!,
+      theItem?.todolistId!,
+      true,
+      theItem?.userId!,
+    );
     // await Todoitem.updateTodoitem({
     //   ...theItem!,
     //   finished: true,
     // });
     setTodoitems(
       todoitems.map((todoitem) => {
-        if (todoitem.$id === selectedItem) {
+        if (todoitem.id === selectedItem) {
           return {
             ...todoitem,
             finished: true,
@@ -166,7 +173,7 @@ const PomodoroCard = (props: Props) => {
             {todoitems.map((todoitem) => {
               if (!todoitem.finished) {
                 return (
-                  <SelectItem key={todoitem.$id} value={todoitem.$id!}>
+                  <SelectItem key={todoitem.id} value={todoitem.id}>
                     {todoitem.value}
                   </SelectItem>
                 );

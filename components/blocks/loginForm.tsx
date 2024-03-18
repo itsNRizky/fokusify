@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { useForm } from "react-hook-form";
 import { loginFormSchema } from "@/schemas";
@@ -26,6 +26,7 @@ type Props = {};
 const LoginForm = (props: Props) => {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
+  const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -35,12 +36,14 @@ const LoginForm = (props: Props) => {
   });
 
   const submitHandler = async (data: z.infer<typeof loginFormSchema>) => {
-    const res = await login(data);
-    if (res.success) {
-      setSuccess(res.success);
-    } else {
-      setError(res.error!);
-    }
+    startTransition(async () => {
+      const res = await login(data);
+      if (res.success) {
+        setSuccess(res.success);
+      } else {
+        setError(res.error!);
+      }
+    });
   };
 
   return (
@@ -82,7 +85,9 @@ const LoginForm = (props: Props) => {
             />
             <LoginError error={error} />
             <LoginSuccess success={success} />
-            <Button className="w-full">Login</Button>
+            <Button disabled={isPending} className="w-full">
+              Login
+            </Button>
           </form>
         </Form>
       </CardContent>

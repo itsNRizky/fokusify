@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useTransition } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,9 +9,9 @@ import {
   AlertDialogTitle,
 } from "../ui/alert-dialog";
 import { Textarea } from "../ui/textarea";
-import { Message } from "@/lib/db/services";
 import { useBoardStore } from "@/store/boardStore";
 import { toast } from "sonner";
+import { create } from "@/actions/message";
 
 type Props = {
   isShown: boolean;
@@ -20,6 +20,7 @@ type Props = {
 
 const CreateMessageModal: FC<Props> = ({ isShown, setIsShown }) => {
   const [file] = useBoardStore((state) => [state.file]);
+  const [isPending, setTransition] = useTransition();
   const [count, setCount] = useState<number>(0);
   const [message, setMessage] = useState<string>("");
 
@@ -32,16 +33,14 @@ const CreateMessageModal: FC<Props> = ({ isShown, setIsShown }) => {
     if (message.length === 0) {
       return;
     }
-    await Message.createMessage({
-      fileId: file.$id!,
-      userId: file.userId,
-      value: message,
+    setTransition(async () => {
+      await create(file.id, message);
     });
+    setIsShown();
     toast("Message Saved!", {
       description:
         "Your message has been saved! Other user will get this message randomly. You can send message once per file",
     });
-    setIsShown();
   };
   return (
     <AlertDialog open={isShown}>
@@ -69,7 +68,9 @@ const CreateMessageModal: FC<Props> = ({ isShown, setIsShown }) => {
           >
             Cancel
           </AlertDialogAction>
-          <AlertDialogAction onClick={submitHandler}>Submit</AlertDialogAction>
+          <AlertDialogAction disabled={isPending} onClick={submitHandler}>
+            Submit
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

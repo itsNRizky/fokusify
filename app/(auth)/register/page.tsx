@@ -1,14 +1,14 @@
-import LoginForm from "@/components/blocks/loginForm";
+import RegisterForm from "@/components/blocks/registerForm";
 import React from "react";
 
 type Props = {};
 
-const LoginPage = (props: Props) => {
+const RegisterPage = (props: Props) => {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
-      <LoginForm />
+      <RegisterForm />
     </main>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

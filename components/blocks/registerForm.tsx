@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { useForm } from "react-hook-form";
 import { registerFormSchema } from "@/schemas";
@@ -26,6 +26,7 @@ type Props = {};
 const RegisterForm = (props: Props) => {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
+  const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
@@ -36,14 +37,16 @@ const RegisterForm = (props: Props) => {
   });
 
   const submitHandler = async (data: z.infer<typeof registerFormSchema>) => {
-    const res = await register(data);
-    if (res.success) {
-      setSuccess(res.success);
-      form.reset();
-    } else {
-      setError(res.error!);
-      form.reset();
-    }
+    startTransition(async () => {
+      const res = await register(data);
+      if (res.success) {
+        setSuccess(res.success);
+        form.reset();
+      } else {
+        setError(res.error!);
+        form.reset();
+      }
+    });
   };
 
   return (
@@ -98,7 +101,9 @@ const RegisterForm = (props: Props) => {
             />
             <LoginError error={error} />
             <LoginSuccess success={success} />
-            <Button className="w-full">Register</Button>
+            <Button disabled={isPending} className="w-full">
+              Register
+            </Button>
           </form>
         </Form>
       </CardContent>

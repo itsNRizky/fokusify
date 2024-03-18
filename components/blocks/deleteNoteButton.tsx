@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { Button } from "../ui/button";
 import { IoCloseOutline } from "react-icons/io5";
-import { Note } from "@/lib/db/services";
 import { useBoardStore } from "@/store/boardStore";
 
 type Props = {
@@ -17,7 +16,7 @@ const DeleteNoteButton: FC<Props> = ({ noteId }) => {
     if (confirm("Are you sure you want to delete this note?")) {
       // TODO: For autosave delete note
       // await Note.deleteNote(noteId);
-      setNotes(notes.filter((note) => note.$id !== noteId));
+      setNotes(notes.filter((note) => note.id !== noteId));
     }
   };
   return (

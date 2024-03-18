@@ -47,6 +47,7 @@ model User {
   subscription  UserSubscription @default(FREE)
   accounts      Account[]
   files         File[]
+  todoitems     Todoitem[]
 }
 
 model File {
@@ -83,9 +84,11 @@ model Todoitem {
   id            String @id @default(cuid())
   value         String
   finished      Boolean
-  todolistId    String
+  todolistId    String?
+  userId        String
 
-  todolist Todolist @relation(fields: [todolistId], references: [id], onDelete: Cascade)
+  todolist Todolist? @relation(fields: [todolistId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Message {

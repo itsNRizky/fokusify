@@ -3,7 +3,8 @@ import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
 import { FaTrash } from "react-icons/fa6";
 import { useBoardStore } from "@/store/boardStore";
-import { Todoitem } from "@/lib/db/services";
+import { type Todoitem as TodoitemType } from "@prisma/client";
+import { update } from "@/actions/todoitem";
 
 type Props = {
   todoitem: TodoitemType;
@@ -19,7 +20,7 @@ const TodoitemCard: FC<Props> = ({ todoitem }) => {
   const removeTodoitemHandler = async () => {
     // TODO: Autosave delete todoitem
     // await Todoitem.deleteTodoitem(todoitem.$id!);
-    setTodoitems(todoitems.filter((item) => item.$id !== todoitem.$id));
+    setTodoitems(todoitems.filter((item) => item.id !== todoitem.id));
   };
 
   const setFinishedHandler = async () => {
@@ -30,7 +31,7 @@ const TodoitemCard: FC<Props> = ({ todoitem }) => {
     };
     setTodoitems(
       todoitems.map((item) => {
-        if (item.$id === todoitem.$id) {
+        if (item.id === todoitem.id) {
           return {
             ...item,
             finished: !item.finished,
@@ -40,11 +41,17 @@ const TodoitemCard: FC<Props> = ({ todoitem }) => {
         }
       }),
     );
-    // TODO: Autosave set finished
-    // await Todoitem.updateTodoitem(finishedTodoitem);
+
+    await update(
+      finishedTodoitem.id,
+      finishedTodoitem.value,
+      finishedTodoitem.todolistId!,
+      finishedTodoitem.finished,
+      finishedTodoitem.userId,
+    );
   };
   return (
-    <li key={todoitem.$id} className="flex items-center justify-between gap-3">
+    <li key={todoitem.id} className="flex items-center justify-between gap-3">
       <div className="flex items-center gap-2">
         <Checkbox onClick={setFinishedHandler} checked={todoitem.finished} />
         <span className={`${todoitem.finished ? "line-through" : ""}`}>

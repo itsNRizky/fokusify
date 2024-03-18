@@ -1,4 +1,11 @@
 import { create } from "zustand";
+import {
+  type File as FileType,
+  type Note as NoteType,
+  type Todolist as TodolistType,
+  type Todoitem as TodoitemType,
+  type User as UserType,
+} from "@prisma/client";
 
 interface BoardState {
   user: UserType;
@@ -19,10 +26,18 @@ interface BoardState {
 }
 
 export const useBoardStore = create<BoardState>((set) => ({
-  user: { name: "", image: "", accountId: "" },
-  file: { name: "", date: "", finished: false, userId: "" },
+  user: {
+    name: "",
+    email: "",
+    emailVerified: null,
+    subscription: "FREE",
+    image: "",
+    password: null,
+    id: "",
+  },
+  file: { id: "", name: "", date: new Date(), finished: false, userId: "" },
   notes: [],
-  todolist: { fileId: "", visible: false },
+  todolist: { id: "", visible: false, fileId: "" },
   todoitems: [],
   showPomodoro: false,
   showYoutube: false,

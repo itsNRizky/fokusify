@@ -2,12 +2,18 @@ import { db } from "../prisma";
 import { type Note as NoteType } from "@prisma/client";
 
 export const Note = {
-  create: async (note: NoteType): Promise<NoteType | null> => {
+  create: async ({
+    value,
+    fileId,
+  }: {
+    value: string;
+    fileId: string;
+  }): Promise<NoteType | null> => {
     try {
       const createdNote = await db.note.create({
         data: {
-          value: note.value,
-          fileId: note.fileId,
+          value: value,
+          fileId: fileId,
         },
       });
       return createdNote;

@@ -1,13 +1,12 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import DraggableCard from "../ui/draggableCard";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { FaPlus } from "react-icons/fa6";
 import { IoRemoveOutline } from "react-icons/io5";
 import TodoitemCard from "./todoitemCard";
 import { useBoardStore } from "@/store/boardStore";
 import CreateTodoitemForm from "./createTodoitemForm";
-import { Todolist } from "@/lib/db/services";
+import { type Todoitem as TodoitemType } from "@prisma/client";
+import { type Todolist as TodolistType } from "@prisma/client";
 
 type Props = {
   todolist: TodolistType;
@@ -27,8 +26,8 @@ const TodolistCard: FC<Props> = ({ todolist, todoitems, className }) => {
   return (
     <DraggableCard
       className={`${className} w-72 ${todolist.visible ? "" : "hidden"}`}
-      draggableId={todolist.$id!}
-      key={todolist.$id}
+      draggableId={todolist.id}
+      key={todolist.id}
     >
       <div className="flex items-center justify-between">
         <h3 className="font-bold">Todolist</h3>
@@ -39,7 +38,7 @@ const TodolistCard: FC<Props> = ({ todolist, todoitems, className }) => {
       </div>
       <ul className="mb-3 flex flex-col gap-1">
         {todoitems.map((todoitem) => (
-          <TodoitemCard key={todoitem.$id} todoitem={todoitem} />
+          <TodoitemCard key={todoitem.id} todoitem={todoitem} />
         ))}
       </ul>
       <CreateTodoitemForm />

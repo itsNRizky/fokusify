@@ -2,14 +2,22 @@ import { db } from "../prisma";
 import { type File as FileType } from "@prisma/client";
 
 export const File = {
-  create: async (file: FileType): Promise<FileType | null> => {
+  create: async ({
+    name,
+    date,
+    userId,
+  }: {
+    name: string;
+    date: Date;
+    userId: string;
+  }): Promise<FileType | null> => {
     try {
       const createdFile = await db.file.create({
         data: {
-          name: file.name,
-          date: file.date,
+          name: name,
+          date: date,
           finished: false,
-          userId: file.userId,
+          userId: userId,
         },
       });
       return createdFile;

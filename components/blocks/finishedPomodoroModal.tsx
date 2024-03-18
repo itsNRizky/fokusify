@@ -8,8 +8,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../ui/alert-dialog";
-import { Message } from "@/lib/db/services";
 import { useBoardStore } from "@/store/boardStore";
+import { getOneRandom } from "@/actions/message";
 
 type Props = {
   isShown: boolean;
@@ -29,7 +29,7 @@ const FinishedPomodoroModal: FC<Props> = ({
   handler,
   stopSound,
 }) => {
-  const [file] = useBoardStore((state) => [state.file]);
+  const [user] = useBoardStore((state) => [state.user]);
   const [message, setMessage] = useState<MessageOwnerType>({
     user: "",
     value: "",
@@ -40,13 +40,13 @@ const FinishedPomodoroModal: FC<Props> = ({
   };
 
   useEffect(() => {
-    Message.getOneRandomMessage(file.userId).then((res) => {
+    getOneRandom(user.id).then((res) => {
       setMessage({
-        user: res.res[0].userId,
-        value: res.res[0].value,
+        user: res == null ? "" : res.file.user.name!,
+        value: res == null ? "" : res.value,
       });
     });
-  }, [status]);
+  }, [status, user.id]);
   return (
     <AlertDialog open={isShown}>
       <AlertDialogContent>

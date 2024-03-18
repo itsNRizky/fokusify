@@ -2,12 +2,16 @@ import { db } from "../prisma";
 import { type Todolist as TodolistType } from "@prisma/client";
 
 export const Todolist = {
-  create: async (todolist: TodolistType): Promise<TodolistType | null> => {
+  create: async ({
+    fileId,
+  }: {
+    fileId: string;
+  }): Promise<TodolistType | null> => {
     try {
       const createdTodolist = await db.todolist.create({
         data: {
           visible: false,
-          fileId: todolist.fileId,
+          fileId: fileId,
         },
       });
       return createdTodolist;
@@ -17,9 +21,9 @@ export const Todolist = {
     }
   },
 
-  getByFileId: async (fileId: string): Promise<TodolistType[] | null> => {
+  getByFileId: async (fileId: string): Promise<TodolistType | null> => {
     try {
-      const todolist = await db.todolist.findMany({
+      const todolist = await db.todolist.findUnique({
         where: {
           fileId,
         },

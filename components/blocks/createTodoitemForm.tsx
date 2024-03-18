@@ -1,20 +1,18 @@
-import React, { FC, FormEvent, useEffect, useState } from "react";
-import { Input } from "../ui/input";
+import React, { FC, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
 import { FaPlus } from "react-icons/fa";
 
-import { Todoitem } from "@/lib/db/services";
+import { type Todoitem as TodoitemType } from "@prisma/client";
 import { useBoardStore } from "@/store/boardStore";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { create, getUnusedByUserId, update } from "@/actions/todoitem";
 
 type Props = {};
 
@@ -30,10 +28,10 @@ const CreateTodoitemForm: FC<Props> = () => {
   const [isPending, setIsPending] = useState<boolean>(false);
 
   useEffect(() => {
-    Todoitem.getUnusedTodoitemsByUserId(user.$id!).then((res) => {
-      setUnusedTodoItems(res.res);
+    getUnusedByUserId(user.id).then((res) => {
+      setUnusedTodoItems(res as TodoitemType[]);
     });
-  }, [user.$id]);
+  }, [user.id]);
 
   const addTodoitemHandler = async () => {
     if (!inputTodoItem) {
@@ -41,48 +39,29 @@ const CreateTodoitemForm: FC<Props> = () => {
     }
 
     setIsPending(true);
-    const $id = await Todoitem.createTodoitem({
-      value: inputTodoItem,
-      todolistId: todolist.$id!,
-      finished: false,
-      userId: user.$id!,
-    });
+    const createdTodoitem = await create(inputTodoItem, todolist.id, user.id);
 
-    setTodoitems([
-      ...todoitems,
-      {
-        $id: $id,
-        todolistId: todolist.$id!,
-        value: inputTodoItem,
-        finished: false,
-        userId: user.$id!,
-      },
-    ]);
+    setTodoitems([...todoitems, createdTodoitem as TodoitemType]);
     setIsPending(false);
   };
 
-  const moveTodoitemHandler = async ($id: string, todoitemValue: string) => {
-    await Todoitem.updateTodoitem({
-      $id: $id,
-      value: todoitemValue,
-      todolistId: todolist.$id!,
-      finished: false,
-      userId: user.$id!,
-    });
+  const moveTodoitemHandler = async (id: string, todoitemValue: string) => {
+    // TODO: Autosave moving todoitem to todolist
+    // await update(id, todoitemValue, todolist.id, false, user.id);
 
     setTodoitems([
       ...todoitems,
       {
-        $id: $id,
-        todolistId: todolist.$id!,
+        id: id,
+        todolistId: todolist.id,
         value: todoitemValue,
         finished: false,
-        userId: user.$id!,
+        userId: user.id,
       },
     ]);
 
     setUnusedTodoItems(
-      unusedTodoitems.filter((todoitem) => todoitem.$id !== $id),
+      unusedTodoitems.filter((todoitem) => todoitem.id !== id),
     );
   };
   return (
@@ -111,21 +90,20 @@ const CreateTodoitemForm: FC<Props> = () => {
               </Button>
             </div>
             <CommandList>
-              <CommandGroup heading="Or choose unfinished Tasks">
-                {unusedTodoitems.length === 0 && (
-                  <CommandItem>No Task Found</CommandItem>
-                )}
-                {unusedTodoitems.map((todoitem) => (
-                  <CommandItem className="cursor-pointer" key={todoitem.$id}>
-                    <div
-                      onClick={() =>
-                        moveTodoitemHandler(todoitem.$id!, todoitem.value)
-                      }
-                    >
-                      {todoitem.value}
-                    </div>
-                  </CommandItem>
-                ))}
+              <CommandGroup heading="Or choose unfinished Tasks from previous">
+                {!unusedTodoitems && <CommandItem>No Task Found</CommandItem>}
+                {unusedTodoitems &&
+                  unusedTodoitems.map((todoitem) => (
+                    <CommandItem className="cursor-pointer" key={todoitem.id}>
+                      <div
+                        onClick={() =>
+                          moveTodoitemHandler(todoitem.id, todoitem.value)
+                        }
+                      >
+                        {todoitem.value}
+                      </div>
+                    </CommandItem>
+                  ))}
               </CommandGroup>
             </CommandList>
           </Command>

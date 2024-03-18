@@ -2,35 +2,42 @@ import React from "react";
 import HeaderApp from "@/components/blocks/headerApp";
 import FooterApp from "@/components/blocks/footerApp";
 import Board from "@/components/blocks/board";
-import { File, Note, Todoitem, Todolist } from "@/lib/db/services";
+import { File } from "@/lib/db/data/file";
+import { type User as UserType } from "@prisma/client";
+import { Note } from "@/lib/db/data/note";
+import { Todolist } from "@/lib/db/data/todolist";
+import { Todoitem } from "@/lib/db/data/todoitem";
 import CreateFileForm from "@/components/blocks/createFileForm";
 import { Toaster } from "@/components/ui/sonner";
+import { auth } from "@/auth";
 
 type Props = {};
 
 const App = async (props: Props) => {
-  // TODO: Login session for userId
+  const session = await auth();
   const user: UserType = {
-    accountId: "testing",
-    name: "Novian Rizky",
-    $id: "65e0479349d3585f9cfd",
+    id: session?.user.id!,
+    name: session?.user.name!,
+    email: session?.user.email!,
+    image: session?.user.image!,
+    subscription: session?.user.subscription!,
+    emailVerified: null,
+    password: null,
   };
-  const file = await File.getLatestFileByUserId(user.$id!);
+  const file = await File.getByUserLatestActive(user.id);
   const AppBody = async () => {
-    if (file.total > 0) {
-      const notes = await Note.getNotesByFileId(file.res[0].$id!);
-      const todolist = await Todolist.getTodolistByFileId(file.res[0].$id!);
-      const todoitems = await Todoitem.getTodoitemsByTodolistId(
-        todolist.res[0].$id!,
-      );
+    if (file) {
+      const notes = await Note.getByFileId(file.id);
+      const todolist = await Todolist.getByFileId(file.id);
+      const todoitems = await Todoitem.getByTodolistId(todolist?.id!);
       return (
         <>
           <Board
             className="flex-1 overflow-hidden"
-            fileProp={file.res[0]}
-            notesProp={notes.res}
-            todolistProp={todolist.res[0]}
-            todoitemsProp={todoitems.res}
+            fileProp={file}
+            notesProp={notes!}
+            todolistProp={todolist!}
+            todoitemsProp={todoitems!}
             // TODO: Login session for userId
             userProp={user}
           />
@@ -42,7 +49,7 @@ const App = async (props: Props) => {
       return (
         <CreateFileForm
           // TODO: Login session for userId
-          userId={"65e0479349d3585f9cfd"}
+          userId={user.id}
           className="flex min-h-screen flex-col items-center justify-center"
         />
       );
@@ -51,7 +58,7 @@ const App = async (props: Props) => {
 
   return (
     <main className="flex min-h-screen flex-col justify-between">
-      <HeaderApp className="fixed top-0 w-screen" />
+      <HeaderApp userProp={user} className="fixed top-0 w-screen" />
       <AppBody />
     </main>
   );

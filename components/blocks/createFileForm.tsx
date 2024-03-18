@@ -1,5 +1,5 @@
 "use client";
-import React, { FC } from "react";
+import React, { FC, useTransition } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -14,18 +14,8 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { File, Todolist } from "@/lib/db/services";
-
-const fileFormSchema = z.object({
-  name: z
-    .string({
-      required_error: "Name for the file is required",
-    })
-    .min(1)
-    .max(50),
-});
-
-export type FileFormType = z.infer<typeof fileFormSchema>;
+import { fileFormSchema } from "@/schemas";
+import { create } from "@/actions/createFile";
 
 type Props = {
   className: string;
@@ -33,25 +23,18 @@ type Props = {
 };
 
 const CreateFileForm: FC<Props> = ({ className, userId }) => {
-  const form = useForm<FileFormType>({
+  const [isPending, startTransition] = useTransition();
+  const form = useForm<z.infer<typeof fileFormSchema>>({
     resolver: zodResolver(fileFormSchema),
     defaultValues: {
       name: "",
     },
   });
 
-  const submitHandlerr = async (data: FileFormType) => {
-    const fileId = await File.createFile({
-      name: data.name,
-      date: new Date().toISOString(),
-      userId: userId,
-      finished: false,
+  const submitHandlerr = async (data: z.infer<typeof fileFormSchema>) => {
+    startTransition(() => {
+      create(userId, data);
     });
-    const todolistId = await Todolist.createTodolist({
-      visible: false,
-      fileId: fileId,
-    });
-    location.reload();
   };
 
   // TODO: Create a button to add date inside the name input
@@ -79,7 +62,9 @@ const CreateFileForm: FC<Props> = ({ className, userId }) => {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button disabled={isPending} type="submit">
+            Submit
+          </Button>
         </div>
       </form>
     </Form>

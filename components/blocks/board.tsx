@@ -14,9 +14,15 @@ import NoteCard from "./noteCard";
 import TodolistCard from "./todolistCard";
 import PomodoroCard from "./pomodoroCard";
 import YoutubeCard from "./youtubeCard";
-import { Note, Todoitem, Todolist } from "@/lib/db/services";
+import {
+  type File as FileType,
+  type Note as NoteType,
+  type Todolist as TodolistType,
+  type Todoitem as TodoitemType,
+  type User as UserType,
+} from "@prisma/client";
 import { toast } from "sonner";
-import { saveBoardToDatabaseHandler } from "@/lib/utils";
+import { saveBoardToDatabaseHandler } from "@/actions/board";
 
 type Props = {
   className?: string;
@@ -117,9 +123,9 @@ const Board: FC<Props> = ({
         {notes.length > 0 &&
           notes.map((note) => (
             <NoteCard
-              key={note.$id}
+              key={note.id}
               className="w-1/5"
-              draggableId={note.$id!}
+              draggableId={note.id}
               note={note}
             />
           ))}
