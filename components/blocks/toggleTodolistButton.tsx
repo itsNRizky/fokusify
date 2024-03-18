@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { useBoardStore } from "@/store/boardStore";
-import { Todolist } from "@/lib/db/services";
 import {
   HoverCard,
   HoverCardContent,

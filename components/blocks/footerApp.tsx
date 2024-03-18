@@ -36,7 +36,7 @@ const FooterApp: FC<Props> = (props: Props) => {
       <nav>
         <ul className="flex items-center justify-between p-4">
           <li className="hidden w-1/3 justify-start sm:flex">
-            <h6 className="text-xs">Fokusify ver 0.21</h6>
+            <h6 className="text-xs">Fokusify ver 0.22</h6>
           </li>
           <li className="flex flex-1 justify-center">
             <Toolbar />
