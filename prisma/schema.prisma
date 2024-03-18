@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+enum UserSubscription {
+  FREE
+  PRO
+}
+
+model User {
+  id            String @id @default(cuid())
+  name          String?
+  email         String? @unique
+  emailVerified DateTime?
+  image         String?
+  password      String? //its optional because when we use oAuth Provider, we don't have the password. So need to make it optional
+  subscription  UserSubscription @default(FREE)
+  accounts      Account[]
+  files         File[]
+}
+
+model File {
+  id            String @id @default(cuid())
+  name          String
+  date          DateTime
+  finished      Boolean
+  userId        String
+  notes         Note[]
+  todolist      Todolist?
+  message       Message?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Note {
+  id            String @id @default(cuid())
+  value         String?
+  fileId        String
+
+  file File @relation(fields: [fileId], references: [id], onDelete: Cascade)
+}
+
+model Todolist {
+  id            String @id @default(cuid())
+  visible       Boolean
+  fileId        String @unique
+  todoitems     Todoitem[]
+
+  file File @relation(fields: [fileId], references: [id], onDelete: Cascade)
+}
+
+model Todoitem {
+  id            String @id @default(cuid())
+  value         String
+  finished      Boolean
+  todolistId    String
+
+  todolist Todolist @relation(fields: [todolistId], references: [id], onDelete: Cascade)
+}
+
+model Message {
+  id            String @id @default(cuid())
+  value         String
+  fileId        String @unique
+
+  file  File @relation(fields: [fileId], references: [id], onDelete: Cascade)
+}
