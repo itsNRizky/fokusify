@@ -33,7 +33,7 @@ const App = async (props: Props) => {
       return (
         <>
           <Board
-            className="flex-1 overflow-hidden"
+            className="min-h-screen w-screen flex-1"
             fileProp={file}
             notesProp={notes!}
             todolistProp={todolist!}

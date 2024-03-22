@@ -46,7 +46,6 @@ const NoteCard: FC<Props> = ({ draggableId, note, className }) => {
       </div>
       <Textarea
         value={value}
-        maxLength={100}
         onBlur={updateNoteHandler}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Type your note here."

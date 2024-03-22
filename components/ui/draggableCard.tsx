@@ -35,7 +35,7 @@ const DraggableCard: FC<Props> = ({ children, draggableId, className }) => {
       className={`${className}`}
       style={
         {
-          position: "relative",
+          position: "absolute",
           zIndex: 10,
           top: y,
           left: x,

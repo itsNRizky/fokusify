@@ -113,11 +113,11 @@ const PomodoroCard = (props: Props) => {
         if (status === "Work") {
           setStatus("Break");
           setIsFinishedSession(true);
-          return breakTime;
+          return breakTime * 60;
         } else {
           setStatus("Work");
           setIsFinishedSession(true);
-          return workTime;
+          return workTime * 60;
         }
       }
       return prevTimeLeft - 1;
