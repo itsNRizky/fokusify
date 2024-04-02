@@ -141,7 +141,7 @@ function useKeyPress(key: string, callback: () => void) {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === key && (event.ctrlKey || event.metaKey)) {
-        event.preventDefault(); // Prevent the default browser behavior
+        event.preventDefault();
         callback();
       }
     };
