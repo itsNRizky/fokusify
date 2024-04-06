@@ -3,19 +3,24 @@ import { type Todoitem as TodoitemType } from "@prisma/client";
 
 export const Todoitem = {
   create: async ({
+    id,
     value,
     todolistId,
     userId,
+    finished,
   }: {
+    id?: string;
     value: string;
     todolistId: string;
     userId: string;
+    finished: boolean;
   }): Promise<TodoitemType | null> => {
     try {
       const createdTodoitem = await db.todoitem.create({
         data: {
+          id: id,
           value: value,
-          finished: false,
+          finished: finished,
           todolistId: todolistId,
           userId: userId,
         },
@@ -24,6 +29,16 @@ export const Todoitem = {
     } catch (err) {
       console.log(err);
       return null;
+    }
+  },
+
+  createMany: async (todoitems: TodoitemType[]): Promise<void> => {
+    try {
+      await db.todoitem.createMany({
+        data: todoitems,
+      });
+    } catch (err) {
+      console.log(err);
     }
   },
 

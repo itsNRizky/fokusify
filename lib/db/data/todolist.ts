@@ -4,12 +4,15 @@ import { type Todolist as TodolistType } from "@prisma/client";
 export const Todolist = {
   create: async ({
     fileId,
+    id,
   }: {
+    id?: string;
     fileId: string;
   }): Promise<TodolistType | null> => {
     try {
       const createdTodolist = await db.todolist.create({
         data: {
+          id: id,
           visible: false,
           fileId: fileId,
         },

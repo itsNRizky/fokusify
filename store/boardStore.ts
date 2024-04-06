@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
+import { get, set, del } from "idb-keyval";
 import {
   type File as FileType,
   type Note as NoteType,
@@ -15,6 +17,7 @@ interface BoardState {
   todoitems: TodoitemType[];
   showPomodoro: boolean;
   showYoutube: boolean;
+  _isHydrated: boolean;
 
   setUser: (user: UserType) => void;
   setFile: (file: FileType) => void;
@@ -23,50 +26,81 @@ interface BoardState {
   setTodoitems: (todoitems: TodoitemType[]) => void;
   setShowPomodoro: (showPomodoro: boolean) => void;
   setShowYoutube: (showYoutube: boolean) => void;
+  clear: () => void;
+  setIsHydrated: (state: boolean) => void;
 }
 
-export const useBoardStore = create<BoardState>((set) => ({
-  user: {
-    name: "",
-    email: "",
-    emailVerified: null,
-    subscription: "FREE",
-    image: "",
-    password: null,
-    id: "",
+const storage: StateStorage = {
+  getItem: async (name: string): Promise<string | null> => {
+    return (await get(name)) || null;
   },
-  file: { id: "", name: "", date: new Date(), finished: false, userId: "" },
-  notes: [],
-  todolist: { id: "", visible: false, fileId: "" },
-  todoitems: [],
-  showPomodoro: false,
-  showYoutube: false,
+  setItem: async (name: string, value: string): Promise<void> => {
+    await set(name, value);
+  },
+  removeItem: async (name: string): Promise<void> => {
+    await del(name);
+  },
+};
 
-  setUser: (user: UserType) => {
-    set({ user: user });
-  },
+export const useBoardStore = create<BoardState>()(
+  persist(
+    (set) => ({
+      user: {
+        name: "",
+        email: "",
+        emailVerified: null,
+        subscription: "FREE",
+        image: "",
+        password: null,
+        id: "",
+      },
+      file: { id: "", name: "", date: new Date(), finished: false, userId: "" },
+      notes: [],
+      todolist: { id: "", visible: false, fileId: "" },
+      todoitems: [],
+      showPomodoro: false,
+      showYoutube: false,
+      _isHydrated: false,
 
-  setFile: (file: FileType) => {
-    set({ file: file });
-  },
-
-  setNotes: (notes: NoteType[]) => {
-    set({ notes: notes });
-  },
-
-  setTodolist: (todolist: TodolistType) => {
-    set({ todolist: todolist });
-  },
-
-  setTodoitems: (todoitems: TodoitemType[]) => {
-    set({ todoitems: todoitems });
-  },
-
-  setShowPomodoro: (showPomodoro: boolean) => {
-    set({ showPomodoro: showPomodoro });
-  },
-
-  setShowYoutube: (showYoutube: boolean) => {
-    set({ showYoutube: showYoutube });
-  },
-}));
+      setUser: (user: UserType) => set({ user }),
+      setFile: (file: FileType) => set({ file }),
+      setNotes: (notes: NoteType[]) => set({ notes }),
+      setTodolist: (todolist: TodolistType) => set({ todolist }),
+      setTodoitems: (todoitems: TodoitemType[]) => set({ todoitems }),
+      setShowPomodoro: (showPomodoro: boolean) => set({ showPomodoro }),
+      setShowYoutube: (showYoutube: boolean) => set({ showYoutube }),
+      setIsHydrated: (state: boolean) => set({ _isHydrated: state }),
+      clear: () =>
+        set({
+          user: {
+            name: "",
+            email: "",
+            emailVerified: null,
+            subscription: "FREE",
+            image: "",
+            password: null,
+            id: "",
+          },
+          file: {
+            id: "",
+            name: "",
+            date: new Date(),
+            finished: false,
+            userId: "",
+          },
+          notes: [],
+          todolist: { id: "", visible: false, fileId: "" },
+          todoitems: [],
+          showPomodoro: false,
+          showYoutube: false,
+        }),
+    }),
+    {
+      name: "fokusify-storage",
+      storage: createJSONStorage(() => storage),
+      onRehydrateStorage: () => (state) => {
+        state?.setIsHydrated(true);
+      },
+    },
+  ),
+);

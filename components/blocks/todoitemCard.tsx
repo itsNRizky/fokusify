@@ -4,7 +4,6 @@ import { Button } from "../ui/button";
 import { FaTrash } from "react-icons/fa6";
 import { useBoardStore } from "@/store/boardStore";
 import { type Todoitem as TodoitemType } from "@prisma/client";
-import { update } from "@/actions/todoitem";
 
 type Props = {
   todoitem: TodoitemType;
@@ -25,10 +24,6 @@ const TodoitemCard: FC<Props> = ({ todoitem }) => {
 
   const setFinishedHandler = async () => {
     setChecked(!checked);
-    const finishedTodoitem: TodoitemType = {
-      ...todoitem,
-      finished: !todoitem.finished,
-    };
     setTodoitems(
       todoitems.map((item) => {
         if (item.id === todoitem.id) {
@@ -42,13 +37,19 @@ const TodoitemCard: FC<Props> = ({ todoitem }) => {
       }),
     );
 
-    await update(
-      finishedTodoitem.id,
-      finishedTodoitem.value,
-      finishedTodoitem.todolistId!,
-      finishedTodoitem.finished,
-      finishedTodoitem.userId,
-    );
+    // const finishedTodoitem: TodoitemType = {
+    //   ...todoitem,
+    //   finished: !todoitem.finished,
+    // };
+
+    // NOTE: NO SAVING TO POSTGRES, SAVE TO LOCAL STORAGE FIRST INSTEAD
+    // await update(
+    //   finishedTodoitem.id,
+    //   finishedTodoitem.value,
+    //   finishedTodoitem.todolistId!,
+    //   finishedTodoitem.finished,
+    //   finishedTodoitem.userId,
+    // );
   };
   return (
     <li key={todoitem.id} className="flex items-center justify-between gap-3">

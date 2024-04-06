@@ -15,16 +15,19 @@ type Props = {
 
 const ProfileLogout: FC<Props> = ({ userProp }) => {
   const [isPending, startTransition] = useTransition();
-  const [file, notes, todolist, todoitems] = useBoardStore((state) => [
+  const [file, notes, todolist, todoitems, clear] = useBoardStore((state) => [
     state.file,
     state.notes,
     state.todolist,
     state.todoitems,
+    state.clear,
   ]);
+
   const logoutHandler = () => {
     startTransition(async () => {
-      toast("Saving your progress...");
+      toast("Saving your progress");
       await saveBoardToDatabaseHandler(notes, todolist, todoitems, file);
+      useBoardStore.persist.clearStorage();
       toast("Your progress has been saved, logging out...");
       signOut({ callbackUrl: "/login" });
     });

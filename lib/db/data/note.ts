@@ -3,15 +3,18 @@ import { type Note as NoteType } from "@prisma/client";
 
 export const Note = {
   create: async ({
+    id,
     value,
     fileId,
   }: {
+    id?: string;
     value: string;
     fileId: string;
   }): Promise<NoteType | null> => {
     try {
       const createdNote = await db.note.create({
         data: {
+          id: id,
           value: value,
           fileId: fileId,
         },
@@ -20,6 +23,16 @@ export const Note = {
     } catch (err) {
       console.log(err);
       return null;
+    }
+  },
+
+  createMany: async (notes: NoteType[]): Promise<void> => {
+    try {
+      await db.note.createMany({
+        data: notes,
+      });
+    } catch (err) {
+      console.log(err);
     }
   },
 

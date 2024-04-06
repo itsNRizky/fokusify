@@ -10,6 +10,7 @@ import { useBoardStore } from "@/store/boardStore";
 import { Note } from "@/lib/db/data/note";
 import { type Note as NoteType } from "@prisma/client";
 import { create } from "@/actions/note";
+import cuid from "cuid";
 
 type Props = {};
 
@@ -20,9 +21,14 @@ const AddNoteButton: FC<Props> = (props: Props) => {
     state.notes,
     state.setNotes,
   ]);
-  const addNoteHandler = async () => {
-    startTransition(async () => {
-      const createdNote = await create(file.id, "");
+  const addNoteHandler = () => {
+    startTransition(() => {
+      // NOTE: const createdNote = await create(file.id, ""); SAVING TO POSTGRES IS CANCELED, SAVE TO LOCAL STORAGE FIRST INSTEAD
+      const createdNote: NoteType = {
+        id: cuid(),
+        value: "",
+        fileId: file.id,
+      };
       setNotes([...notes, createdNote as NoteType]);
     });
   };

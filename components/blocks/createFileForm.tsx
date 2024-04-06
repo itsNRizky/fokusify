@@ -3,6 +3,7 @@ import React, { FC, useEffect, useTransition } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import cuid from "cuid";
 import {
   Form,
   FormControl,
@@ -15,8 +16,8 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { fileFormSchema } from "@/schemas";
-import { create } from "@/actions/file";
 import { useBoardStore } from "@/store/boardStore";
+import { useRouter } from "next/navigation";
 
 type Props = {
   className: string;
@@ -24,6 +25,7 @@ type Props = {
 };
 
 const CreateFileForm: FC<Props> = ({ className, userId }) => {
+  const router = useRouter();
   const [setFile, setNotes, setTodolist, setTodoitems] = useBoardStore(
     (state) => [
       state.setFile,
@@ -55,8 +57,25 @@ const CreateFileForm: FC<Props> = ({ className, userId }) => {
 
   const submitHandlerr = async (data: z.infer<typeof fileFormSchema>) => {
     startTransition(() => {
-      create(userId, data);
+      const createdFile = {
+        id: cuid(),
+        name: data.name,
+        date: new Date(),
+        finished: false,
+        userId: userId,
+      };
+
+      const createdTodolist = {
+        id: cuid(),
+        visible: false,
+        fileId: createdFile.id,
+      };
+
+      setFile(createdFile);
+      setTodolist(createdTodolist);
+      // NOTE: create(userId, data); CANCEL SAVING DATA TO POSTGREE, SAVE IN LOCAL STORAGE FIRST INSTEAD
     });
+    router.refresh();
   };
 
   // TODO: Create a button to add date inside the name input

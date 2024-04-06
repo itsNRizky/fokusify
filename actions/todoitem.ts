@@ -6,7 +6,7 @@ export const create = async (
   todolistId: string,
   userId: string,
 ) => {
-  return await Todoitem.create({ value, todolistId, userId });
+  return await Todoitem.create({ value, todolistId, userId, finished: false });
 };
 
 export const update = async (

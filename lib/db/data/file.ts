@@ -6,7 +6,9 @@ export const File = {
     name,
     date,
     userId,
+    id,
   }: {
+    id?: string;
     name: string;
     date: Date;
     userId: string;
@@ -14,6 +16,7 @@ export const File = {
     try {
       const createdFile = await db.file.create({
         data: {
+          id: id,
           name: name,
           date: date,
           finished: false,

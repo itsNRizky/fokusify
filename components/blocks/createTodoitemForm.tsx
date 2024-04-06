@@ -13,6 +13,7 @@ import { type Todoitem as TodoitemType } from "@prisma/client";
 import { useBoardStore } from "@/store/boardStore";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { create, getUnusedByUserId, update } from "@/actions/todoitem";
+import cuid from "cuid";
 
 type Props = {};
 
@@ -39,8 +40,14 @@ const CreateTodoitemForm: FC<Props> = () => {
     }
 
     setIsPending(true);
-    const createdTodoitem = await create(inputTodoItem, todolist.id, user.id);
-
+    // NOTE: const createdTodoitem = await create(inputTodoItem, todolist.id, user.id); NO SAVING TO POSTGRES, SAVE TO LOCAL STORAGE FIRST INSTEAD
+    const createdTodoitem = {
+      id: cuid(),
+      todolistId: todolist.id,
+      value: inputTodoItem,
+      finished: false,
+      userId: user.id,
+    };
     setTodoitems([...todoitems, createdTodoitem as TodoitemType]);
     setIsPending(false);
   };
