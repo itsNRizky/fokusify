@@ -37,7 +37,11 @@ const ProfileLogout: FC<Props> = ({ userProp }) => {
       <PopoverTrigger asChild>
         <Button size={"icon"} className="rounded-full">
           <Avatar>
-            <AvatarImage src={userProp.image!} alt={userProp.name!} />
+            <AvatarImage
+              className="rounded-full"
+              src={userProp.image!}
+              alt={userProp.name!}
+            />
             <AvatarFallback>{getInitials(userProp.name!)}</AvatarFallback>
           </Avatar>
         </Button>

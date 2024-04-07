@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
-
+import Google from "next-auth/providers/google";
 import type { NextAuthConfig } from "next-auth";
 import { loginFormSchema } from "./schemas";
 import { User } from "./lib/db/data/user";
@@ -9,6 +9,10 @@ import { User } from "./lib/db/data/user";
 export default {
   secret: process.env.AUTH_SECRET_KEY,
   providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     credentials({
       authorize: async (credentials) => {
         const validatedFields = loginFormSchema.safeParse(credentials);

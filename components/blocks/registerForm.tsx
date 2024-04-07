@@ -20,6 +20,7 @@ import Link from "next/link";
 import { FaGoogle } from "react-icons/fa6";
 import { FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
 import { register } from "@/actions/register";
+import { loginGoogle } from "@/actions/login";
 
 type Props = {};
 
@@ -47,6 +48,10 @@ const RegisterForm = (props: Props) => {
         form.reset();
       }
     });
+  };
+
+  const loginGoogleHandler = async () => {
+    await loginGoogle();
   };
 
   return (
@@ -117,7 +122,11 @@ const RegisterForm = (props: Props) => {
       </CardFooter>
       <div className="-mt-4 mb-2 w-full text-center text-sm">or</div>
       <CardFooter>
-        <Button className="flex w-full items-center gap-2" variant={"outline"}>
+        <Button
+          onClick={loginGoogleHandler}
+          className="flex w-full items-center gap-2"
+          variant={"outline"}
+        >
           <FaGoogle />
           Login with Google
         </Button>
