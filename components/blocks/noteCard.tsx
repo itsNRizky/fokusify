@@ -6,6 +6,7 @@ import DraggableCard from "../ui/draggableCard";
 import DeleteNoteButton from "./deleteNoteButton";
 import { useBoardStore } from "@/store/boardStore";
 import { type Note as NoteType } from "@prisma/client";
+import { useThemeStore } from "@/store/themeStore";
 
 type Props = {
   className?: string;
@@ -14,6 +15,7 @@ type Props = {
 };
 
 const NoteCard: FC<Props> = ({ draggableId, note, className }) => {
+  const [style] = useThemeStore((state) => [state.style]);
   const [notes, setNotes] = useBoardStore((state) => [
     state.notes,
     state.setNotes,
@@ -40,11 +42,23 @@ const NoteCard: FC<Props> = ({ draggableId, note, className }) => {
       draggableId={draggableId}
     >
       <div className="flex items-center justify-between">
-        <h3 className="font-bold">Note</h3>
+        <h3
+          style={{
+            color: style === "LIGHT" ? "black" : "white",
+            fontWeight: "bold",
+          }}
+        >
+          Note
+        </h3>
         <div className="w-3/4"></div>
-        <DeleteNoteButton noteId={note.id!} />
+        <DeleteNoteButton style={style} noteId={note.id!} />
       </div>
       <Textarea
+        style={{
+          backgroundColor: style === "LIGHT" ? "white" : "hsl(var(--primary))",
+          color: style === "LIGHT" ? "black" : "white",
+          borderColor: style === "LIGHT" ? "#E5E5E8" : "white",
+        }}
         value={value}
         onBlur={updateNoteHandler}
         onChange={(e) => setValue(e.target.value)}

@@ -7,10 +7,12 @@ import {
 } from "../ui/hover-card";
 import { Button } from "../ui/button";
 import { useBoardStore } from "@/store/boardStore";
+import { useThemeStore } from "@/store/themeStore";
 
 type Props = {};
 
 const ToggleYoutubeButton = (props: Props) => {
+  const [style] = useThemeStore((state) => [state.style]);
   const [showYoutube, setShowYoutube] = useBoardStore((state) => [
     state.showYoutube,
     state.setShowYoutube,
@@ -22,7 +24,11 @@ const ToggleYoutubeButton = (props: Props) => {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Button onClick={visibleHandler} size={"icon"}>
+        <Button
+          variant={style === "LIGHT" ? "secondary" : "default"}
+          onClick={visibleHandler}
+          size={"icon"}
+        >
           <AiOutlineYoutube />
         </Button>
       </HoverCardTrigger>

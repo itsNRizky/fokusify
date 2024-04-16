@@ -18,6 +18,7 @@ import { Button } from "../ui/button";
 import { fileFormSchema } from "@/schemas";
 import { useBoardStore } from "@/store/boardStore";
 import { useRouter } from "next/navigation";
+import { useThemeStore } from "@/store/themeStore";
 
 type Props = {
   className: string;
@@ -26,6 +27,7 @@ type Props = {
 
 const CreateFileForm: FC<Props> = ({ className, userId }) => {
   const router = useRouter();
+  const [style] = useThemeStore((state) => [state.style]);
   const [setFile, setNotes, setTodolist, setTodoitems] = useBoardStore(
     (state) => [
       state.setFile,
@@ -103,7 +105,11 @@ const CreateFileForm: FC<Props> = ({ className, userId }) => {
               </FormItem>
             )}
           />
-          <Button disabled={isPending} type="submit">
+          <Button
+            variant={style === "LIGHT" ? "secondary" : "default"}
+            disabled={isPending}
+            type="submit"
+          >
             Submit
           </Button>
         </div>

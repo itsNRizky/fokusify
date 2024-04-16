@@ -5,6 +5,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { LuTimerReset } from "react-icons/lu";
+import { useThemeStore } from "@/store/themeStore";
 
 type Props = {
   workTimer: number;
@@ -19,11 +20,15 @@ const SetPomodoroTImerForm: React.FC<Props> = ({
   setBreakTimer,
   setWorkTImer,
 }) => {
+  const [style] = useThemeStore((state) => [state.style]);
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button size={"icon"} variant={"link"}>
-          <IoSettingsOutline className="h-4 w-4" />
+          <IoSettingsOutline
+            style={{ color: style === "LIGHT" ? "black" : "white" }}
+            className="h-4 w-4"
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="flex flex-col gap-4">

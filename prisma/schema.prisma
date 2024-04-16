@@ -48,6 +48,7 @@ model User {
   accounts      Account[]
   files         File[]
   todoitems     Todoitem[]
+  theme         Theme?
 }
 
 model File {
@@ -97,4 +98,18 @@ model Message {
   fileId        String @unique
 
   file  File @relation(fields: [fileId], references: [id], onDelete: Cascade)
+}
+
+enum ThemeStyle {
+  DARK
+  LIGHT
+}
+
+model Theme {
+  id                         String @id @default(cuid())
+  boardBackground            String @default("default")
+  style                      ThemeStyle @default(LIGHT)
+  userId                     String @unique
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

@@ -7,13 +7,21 @@ import ToggleTodolistButton from "./toggleTodolistButton";
 import TogglePomodoroButton from "./togglePomodoroButton";
 import ToggleMessage from "./toggleMessage";
 import ToggleYoutubeButton from "./toggleYoutubeButton";
+import { useThemeStore } from "@/store/themeStore";
 
 type Props = {};
 
 const Toolbar = (props: Props) => {
+  const [style] = useThemeStore((state) => [state.style]);
   return (
     <nav>
-      <ul className="flex h-10 items-center gap-3 rounded-md bg-primary p-2 text-primary-foreground">
+      <ul
+        style={{
+          backgroundColor:
+            style === "LIGHT" ? "hsl(var(--secondary))" : "hsl(var(--primary))",
+        }}
+        className="flex h-10 items-center gap-3 rounded-md p-2 text-primary-foreground"
+      >
         <li>
           <AddNoteButton />
         </li>

@@ -5,9 +5,10 @@ import { useBoardStore } from "@/store/boardStore";
 
 type Props = {
   noteId: string;
+  style: "LIGHT" | "DARK";
 };
 
-const DeleteNoteButton: FC<Props> = ({ noteId }) => {
+const DeleteNoteButton: FC<Props> = ({ noteId, style }) => {
   const [notes, setNotes] = useBoardStore((state) => [
     state.notes,
     state.setNotes,
@@ -21,7 +22,10 @@ const DeleteNoteButton: FC<Props> = ({ noteId }) => {
   };
   return (
     <Button onClick={deleteNoteHandler} size={"icon"} variant={"link"}>
-      <IoCloseOutline className="h-6 w-6" />
+      <IoCloseOutline
+        style={{ color: style === "LIGHT" ? "black" : "white" }}
+        className="h-6 w-6"
+      />
     </Button>
   );
 };

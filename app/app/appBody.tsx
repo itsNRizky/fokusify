@@ -29,33 +29,15 @@ const AppBody: React.FC<Props> = ({
   todolistProp,
   todoitemsProp,
 }) => {
-  const [
-    file,
-    notes,
-    todolist,
-    todoitems,
-    isHydrated,
-    setFile,
-    setNotes,
-    setTodolist,
-    setTodoitems,
-  ] = useBoardStore((state) => [
-    state.file,
-    state.notes,
-    state.todolist,
-    state.todoitems,
-    state._isHydrated,
-    state.setFile,
-    state.setNotes,
-    state.setTodolist,
-    state.setTodoitems,
-  ]);
-
-  // const notes = await Note.getByFileId(file.id);
-  // const todolist = await Todolist.getByFileId(file.id);
-  // const todoitems = await Todoitem.getByTodolistId(todolist?.id!);
-
-  // FIXME: When there is data in indexedDB, the board still taking data from the database instead of indexedDB
+  const [file, notes, todolist, todoitems, isHydrated] = useBoardStore(
+    (state) => [
+      state.file,
+      state.notes,
+      state.todolist,
+      state.todoitems,
+      state._isHydrated,
+    ],
+  );
 
   if (!isHydrated) {
     return (

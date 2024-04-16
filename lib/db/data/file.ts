@@ -62,11 +62,11 @@ export const File = {
     }
   },
 
-  finish: async (id: string): Promise<FileType | null> => {
+  finish: async (fileId: string): Promise<FileType | null> => {
     try {
       const finishedFile = await db.file.update({
         where: {
-          id,
+          id: fileId,
         },
         data: {
           finished: true,

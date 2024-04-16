@@ -7,6 +7,7 @@ import { useBoardStore } from "@/store/boardStore";
 import CreateTodoitemForm from "./createTodoitemForm";
 import { type Todoitem as TodoitemType } from "@prisma/client";
 import { type Todolist as TodolistType } from "@prisma/client";
+import { useThemeStore } from "@/store/themeStore";
 
 type Props = {
   todolist: TodolistType;
@@ -16,6 +17,7 @@ type Props = {
 
 const TodolistCard: FC<Props> = ({ todolist, todoitems, className }) => {
   const [setTodolist] = useBoardStore((state) => [state.setTodolist]);
+  const [style] = useThemeStore((state) => [state.style]);
 
   const visibleHandler = async () => {
     // TODO: Autosave set visible
@@ -30,10 +32,20 @@ const TodolistCard: FC<Props> = ({ todolist, todoitems, className }) => {
       key={todolist.id}
     >
       <div className="flex items-center justify-between">
-        <h3 className="font-bold">Todolist</h3>
+        <h3
+          style={{
+            color: style === "LIGHT" ? "black" : "white",
+          }}
+          className="font-bold"
+        >
+          Todolist
+        </h3>
         <div className="w-3/4"></div>
         <Button onClick={visibleHandler} size={"icon"} variant={"link"}>
-          <IoRemoveOutline className="h-6 w-6" />
+          <IoRemoveOutline
+            style={{ color: style === "LIGHT" ? "black" : "white" }}
+            className="h-6 w-6"
+          />
         </Button>
       </div>
       <ul className="mb-3 flex flex-col gap-1">

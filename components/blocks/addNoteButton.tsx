@@ -11,11 +11,13 @@ import { Note } from "@/lib/db/data/note";
 import { type Note as NoteType } from "@prisma/client";
 import { create } from "@/actions/note";
 import cuid from "cuid";
+import { useThemeStore } from "@/store/themeStore";
 
 type Props = {};
 
 const AddNoteButton: FC<Props> = (props: Props) => {
   const [isPending, startTransition] = useTransition();
+  const [style] = useThemeStore((state) => [state.style]);
   const [file, notes, setNotes] = useBoardStore((state) => [
     state.file,
     state.notes,
@@ -35,12 +37,17 @@ const AddNoteButton: FC<Props> = (props: Props) => {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Button disabled={isPending} onClick={addNoteHandler} size={"icon"}>
+        <Button
+          variant={style === "LIGHT" ? "secondary" : "default"}
+          disabled={isPending}
+          onClick={addNoteHandler}
+          size={"icon"}
+        >
           <FaRegNoteSticky />
         </Button>
       </HoverCardTrigger>
       <HoverCardContent>
-        <p className="text-black">Note</p>
+        <p>Note</p>
       </HoverCardContent>
     </HoverCard>
   );

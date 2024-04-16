@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import HeaderApp from "@/components/blocks/headerApp";
 import { File } from "@/lib/db/data/file";
 import { type User as UserType } from "@prisma/client";
@@ -7,6 +7,7 @@ import { Todolist } from "@/lib/db/data/todolist";
 import { Todoitem } from "@/lib/db/data/todoitem";
 import { auth } from "@/auth";
 import AppBody from "./appBody";
+import { Theme } from "@/lib/db/data/theme";
 
 type Props = {};
 
@@ -29,10 +30,18 @@ const App = async (props: Props) => {
     todolist = await Todolist.getByFileId(file?.id!);
     todoitems = await Todoitem.getByTodolistId(todolist?.id!);
   }
+  const theme = await Theme.getThemeByUserId(user.id);
 
   return (
-    <main className="flex min-h-screen flex-col justify-between">
-      <HeaderApp userProp={user} className="fixed top-0 w-screen" />
+    <main
+      style={backgroundStyle(theme?.boardBackground!)}
+      className="flex min-h-screen flex-col justify-between"
+    >
+      <HeaderApp
+        themeProp={theme!}
+        userProp={user}
+        className="fixed top-0 w-screen"
+      />
       <AppBody
         userProp={user}
         fileProp={file!}
@@ -42,6 +51,21 @@ const App = async (props: Props) => {
       />
     </main>
   );
+};
+
+const backgroundStyle = (boardBackground: string): CSSProperties => {
+  if (boardBackground === "default") {
+    return { background: "white" };
+  }
+
+  if (boardBackground[0] === "#") {
+    return { background: boardBackground };
+  }
+
+  return {
+    backgroundImage: `url('${boardBackground}')`,
+    backgroundSize: "cover",
+  };
 };
 
 export default App;

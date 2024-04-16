@@ -6,7 +6,6 @@ import {
   IoRemoveOutline,
   IoPlayOutline,
   IoPauseOutline,
-  IoSettingsOutline,
 } from "react-icons/io5";
 import { LuTimerReset } from "react-icons/lu";
 import { FaCheck } from "react-icons/fa6";
@@ -22,10 +21,12 @@ import FinishedPomodoroModal from "./finishedPomodoroModal";
 import useSound from "use-sound";
 import SetPomodoroTImerForm from "./setPomodoroTImerForm";
 import { update } from "@/actions/todoitem";
+import { useThemeStore } from "@/store/themeStore";
 
 type Props = {};
 
 const PomodoroCard = (props: Props) => {
+  const [style] = useThemeStore((state) => [state.style]);
   const [todoitems, showPomodoro, setTodoitems, setShowPomodoro] =
     useBoardStore((state) => [
       state.todoitems,
@@ -147,7 +148,12 @@ const PomodoroCard = (props: Props) => {
       key={"timer"}
     >
       <div className="-mb-3 flex items-center justify-between">
-        <p className="text-sm text-zinc-500">Current Task</p>
+        <p
+          style={{ color: style === "LIGHT" ? "black" : "white" }}
+          className="text-sm"
+        >
+          Current Task
+        </p>
         <div className="flex items-center gap-2">
           <SetPomodoroTImerForm
             breakTimer={breakTime}
@@ -156,7 +162,10 @@ const PomodoroCard = (props: Props) => {
             setBreakTimer={setBreakTime}
           />
           <Button onClick={visibleHandler} size={"icon"} variant={"link"}>
-            <IoRemoveOutline className="h-6 w-6" />
+            <IoRemoveOutline
+              style={{ color: style === "LIGHT" ? "" : "white" }}
+              className="h-6 w-6"
+            />
           </Button>
         </div>
       </div>
@@ -166,10 +175,22 @@ const PomodoroCard = (props: Props) => {
           value={selectedItem}
           onValueChange={setSelectedItem}
         >
-          <SelectTrigger>
+          <SelectTrigger
+            style={{
+              backgroundColor: style === "LIGHT" ? "" : "hsl(var(--primary))",
+              color: style === "LIGHT" ? "black" : "white",
+            }}
+          >
             <SelectValue className="font-bold" placeholder="Select a task" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent
+            style={{
+              backgroundColor: style === "LIGHT" ? "" : "hsl(var(--primary))",
+              color: style === "LIGHT" ? "black" : "white",
+              borderColor:
+                style === "LIGHT" ? "#E5E5E8" : "hsl(var(--primary))",
+            }}
+          >
             {todoitems.map((todoitem) => {
               if (!todoitem.finished) {
                 return (
@@ -188,7 +209,10 @@ const PomodoroCard = (props: Props) => {
       <div className="flex flex-col items-center justify-center">
         <div className="mb-4 flex h-40 w-40 items-center justify-center rounded-full border-8 border-gray-300">
           <div className="text-center">
-            <p className="text-4xl font-semibold">
+            <p
+              style={{ color: style === "LIGHT" ? "black" : "white" }}
+              className="text-4xl font-semibold"
+            >
               {minutes}:{seconds < 10 ? "0" : ""}
               {seconds}
             </p>
@@ -196,19 +220,35 @@ const PomodoroCard = (props: Props) => {
           </div>
         </div>
         <div className="flex items-center justify-between gap-3">
-          <Button onClick={resetTimer} variant={"secondary"} size={"icon"}>
+          <Button
+            onClick={resetTimer}
+            variant={style === "LIGHT" ? "secondary" : "default"}
+            size={"icon"}
+          >
             <LuTimerReset />
           </Button>
           {isRunning ? (
-            <Button onClick={pauseTimer} size={"icon"}>
+            <Button
+              variant={style === "LIGHT" ? "default" : "secondary"}
+              onClick={pauseTimer}
+              size={"icon"}
+            >
               <IoPauseOutline />
             </Button>
           ) : (
-            <Button onClick={startTimer} size={"icon"}>
+            <Button
+              variant={style === "LIGHT" ? "default" : "secondary"}
+              onClick={startTimer}
+              size={"icon"}
+            >
               <IoPlayOutline />
             </Button>
           )}
-          <Button onClick={finishTask} variant={"secondary"} size={"icon"}>
+          <Button
+            onClick={finishTask}
+            variant={style === "LIGHT" ? "secondary" : "default"}
+            size={"icon"}
+          >
             <FaCheck />
           </Button>
         </div>

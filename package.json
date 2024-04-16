@@ -1,6 +1,6 @@
 {
   "name": "fokusify",
-  "version": "0.26.0",
+  "version": "0.25.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -27,8 +27,10 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slider": "^1.1.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-switch": "^1.0.3",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
+    "cloudinary": "^2.1.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.1",
     "cuid": "^3.0.0",

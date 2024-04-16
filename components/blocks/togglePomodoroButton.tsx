@@ -7,10 +7,12 @@ import {
 import { Button } from "../ui/button";
 import { GoStopwatch } from "react-icons/go";
 import { useBoardStore } from "@/store/boardStore";
+import { useThemeStore } from "@/store/themeStore";
 
 type Props = {};
 
 const TogglePomodoroButton = (props: Props) => {
+  const [style] = useThemeStore((state) => [state.style]);
   const [showPomodoro, setShowPomodoro] = useBoardStore((state) => [
     state.showPomodoro,
     state.setShowPomodoro,
@@ -23,7 +25,11 @@ const TogglePomodoroButton = (props: Props) => {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Button onClick={toggleHandler} size={"icon"}>
+        <Button
+          variant={style === "LIGHT" ? "secondary" : "default"}
+          onClick={toggleHandler}
+          size={"icon"}
+        >
           <GoStopwatch />
         </Button>
       </HoverCardTrigger>

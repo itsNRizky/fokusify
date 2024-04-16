@@ -7,10 +7,12 @@ import {
   HoverCardTrigger,
 } from "../ui/hover-card";
 import { FaRegRectangleList } from "react-icons/fa6";
+import { useThemeStore } from "@/store/themeStore";
 
 type Props = {};
 
 const ToggleTodolistButton = (props: Props) => {
+  const [style] = useThemeStore((state) => [state.style]);
   const [todolist, setTodolist] = useBoardStore((state) => [
     state.todolist,
     state.setTodolist,
@@ -26,7 +28,11 @@ const ToggleTodolistButton = (props: Props) => {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Button onClick={toggleHandler} size={"icon"}>
+        <Button
+          variant={style === "LIGHT" ? "secondary" : "default"}
+          onClick={toggleHandler}
+          size={"icon"}
+        >
           <FaRegRectangleList />
         </Button>
       </HoverCardTrigger>

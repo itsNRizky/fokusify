@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { registerFormSchema } from "@/schemas";
 import { z } from "zod";
 import { User } from "@/lib/db/data/user";
+import { Theme } from "@/lib/db/data/theme";
 
 export const register = async (data: z.infer<typeof registerFormSchema>) => {
   const validatedFields = registerFormSchema.safeParse(data);
@@ -22,11 +23,14 @@ export const register = async (data: z.infer<typeof registerFormSchema>) => {
     };
   }
 
-  await User.create({
+  // TODO: Error handling if user creation fails (network problem for e.g.)
+  const createdUser = await User.create({
     name,
     email,
     password: hashedPassword,
   });
+
+  await Theme.create(createdUser!.id);
 
   return {
     success: "Register successful",

@@ -8,6 +8,7 @@ import { saveBoardToDatabaseHandler } from "@/actions/board";
 import { useBoardStore } from "@/store/boardStore";
 import { finishedFile } from "@/actions/file";
 import { useRouter } from "next/navigation";
+import { useThemeStore } from "@/store/themeStore";
 
 type Props = {
   className?: string;
@@ -16,6 +17,7 @@ type Props = {
 const FooterApp: FC<Props> = (props: Props) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [style] = useThemeStore((state) => [state.style]);
   const [file, notes, todolist, todoitems, clear] = useBoardStore((state) => [
     state.file,
     state.notes,
@@ -41,13 +43,17 @@ const FooterApp: FC<Props> = (props: Props) => {
       <nav>
         <ul className="flex items-center justify-between p-4">
           <li className="hidden w-1/3 justify-start sm:flex">
-            <h6 className="text-xs">Fokusify ver 0.26</h6>
+            <h6 className="text-xs">Fokusify ver 0.27</h6>
           </li>
           <li className="flex flex-1 justify-center">
             <Toolbar />
           </li>
           <li className="flex w-1/3 justify-end">
-            <Button disabled={isPending} onClick={finishedHandler}>
+            <Button
+              variant={style === "LIGHT" ? "secondary" : "default"}
+              disabled={isPending}
+              onClick={finishedHandler}
+            >
               Finish
             </Button>
           </li>

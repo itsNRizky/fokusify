@@ -14,10 +14,12 @@ import { useBoardStore } from "@/store/boardStore";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { create, getUnusedByUserId, update } from "@/actions/todoitem";
 import cuid from "cuid";
+import { useThemeStore } from "@/store/themeStore";
 
 type Props = {};
 
 const CreateTodoitemForm: FC<Props> = () => {
+  const [style] = useThemeStore((state) => [state.style]);
   const [user, todoitems, todolist, setTodoitems] = useBoardStore((state) => [
     state.user,
     state.todoitems,
@@ -75,20 +77,36 @@ const CreateTodoitemForm: FC<Props> = () => {
     <form className="flex items-center justify-between gap-3">
       <Popover>
         <PopoverTrigger asChild>
-          <Button type="button" className="w-full">
+          <Button variant="default" type="button" className="w-full">
             Add task
           </Button>
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent
+          style={{
+            backgroundColor:
+              style === "LIGHT" ? "white" : "hsl(var(--primary))",
+            color: style === "LIGHT" ? "black" : "white",
+            borderColor: style === "LIGHT" ? "#E5E5E8" : "hsl(var(--primary))",
+          }}
+        >
           <Command>
-            <div className="flex items-center">
+            <div
+              style={{
+                backgroundColor: style === "LIGHT" ? "" : "hsl(var(--primary))",
+              }}
+              className="flex items-center"
+            >
               <CommandInput
+                style={{
+                  color: style === "LIGHT" ? "black" : "white",
+                }}
                 name="todoitem"
                 placeholder="Type new task..."
                 value={inputTodoItem}
                 onInput={(e) => setInputTodoItem(e.currentTarget.value)}
               />
               <Button
+                variant="default"
                 disabled={isPending}
                 className=""
                 onClick={addTodoitemHandler}
@@ -97,7 +115,13 @@ const CreateTodoitemForm: FC<Props> = () => {
               </Button>
             </div>
             <CommandList>
-              <CommandGroup heading="Or choose unfinished Tasks from previous">
+              <CommandGroup
+                style={{
+                  backgroundColor:
+                    style === "LIGHT" ? "" : "hsl(var(--primary))",
+                }}
+                heading="Or choose unfinished Tasks from previous"
+              >
                 {!unusedTodoitems && <CommandItem>No Task Found</CommandItem>}
                 {unusedTodoitems &&
                   unusedTodoitems.map((todoitem) => (

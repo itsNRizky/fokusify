@@ -4,6 +4,7 @@ import { db } from "./lib/db/prisma";
 import authConfig from "./auth.config";
 import { User } from "./lib/db/data/user";
 import { UserSubscription } from "@prisma/client";
+import { Theme } from "./lib/db/data/theme";
 
 export const {
   handlers: { GET, POST },
@@ -22,6 +23,8 @@ export const {
           emailVerified: new Date(),
         },
       });
+
+      await Theme.create(user.id!);
     },
   },
   callbacks: {

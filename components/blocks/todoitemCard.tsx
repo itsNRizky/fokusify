@@ -4,12 +4,14 @@ import { Button } from "../ui/button";
 import { FaTrash } from "react-icons/fa6";
 import { useBoardStore } from "@/store/boardStore";
 import { type Todoitem as TodoitemType } from "@prisma/client";
+import { useThemeStore } from "@/store/themeStore";
 
 type Props = {
   todoitem: TodoitemType;
 };
 
 const TodoitemCard: FC<Props> = ({ todoitem }) => {
+  const [style] = useThemeStore((state) => [state.style]);
   const [todoitems, setTodoitems] = useBoardStore((state) => [
     state.todoitems,
     state.setTodoitems,
@@ -54,13 +56,20 @@ const TodoitemCard: FC<Props> = ({ todoitem }) => {
   return (
     <li key={todoitem.id} className="flex items-center justify-between gap-3">
       <div className="flex items-center gap-2">
-        <Checkbox onClick={setFinishedHandler} checked={todoitem.finished} />
-        <span className={`${todoitem.finished ? "line-through" : ""}`}>
+        <Checkbox
+          style={{ borderColor: style === "LIGHT" ? "black" : "white" }}
+          onClick={setFinishedHandler}
+          checked={todoitem.finished}
+        />
+        <span
+          style={{ color: style === "LIGHT" ? "black" : "white" }}
+          className={`${todoitem.finished ? "line-through" : ""}`}
+        >
           {todoitem.value}
         </span>
       </div>
-      <Button onClick={removeTodoitemHandler} variant={"ghost"}>
-        <FaTrash />
+      <Button onClick={removeTodoitemHandler} variant={"link"}>
+        <FaTrash style={{ color: style === "LIGHT" ? "black" : "white" }} />
       </Button>
     </li>
   );

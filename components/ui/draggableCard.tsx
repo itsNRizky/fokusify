@@ -3,7 +3,7 @@ import { useDndMonitor, useDraggable } from "@dnd-kit/core";
 import React, { FC, useState } from "react";
 import { Coordinates } from "@dnd-kit/utilities";
 import { Card, CardContent, CardHeader } from "../ui/card";
-import { IoRemoveOutline } from "react-icons/io5";
+import { useThemeStore } from "@/store/themeStore";
 
 type Props = {
   children: React.ReactNode;
@@ -12,6 +12,7 @@ type Props = {
 };
 
 const DraggableCard: FC<Props> = ({ children, draggableId, className }) => {
+  const [style] = useThemeStore((state) => [state.style]);
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: draggableId,
   });
@@ -40,6 +41,9 @@ const DraggableCard: FC<Props> = ({ children, draggableId, className }) => {
           top: y,
           left: x,
           transform: `translate(${transform?.x ?? 0}px, ${transform?.y ?? 0}px)`,
+          backgroundColor: style === "LIGHT" ? "white" : "hsl(var(--primary))",
+          borderColor: style === "LIGHT" ? "#E5E5E8" : "hsl(var(--primary))",
+          opacity: 0.95,
         } as React.CSSProperties
       }
       ref={setNodeRef}
