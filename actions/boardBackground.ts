@@ -25,7 +25,7 @@ export const uploadBackground = async (
 
   const previousBackgroundExisted = background !== "default";
 
-  await new Promise((resolve, reject) => {
+  return await new Promise((resolve, reject) => {
     cloudinary.uploader
       .upload_stream(uploadOptions, function (errUpload, resUpload) {
         if (errUpload) {
@@ -62,6 +62,4 @@ export const uploadBackground = async (
       })
       .end(buffer);
   });
-
-  redirect("/app");
 };

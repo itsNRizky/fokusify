@@ -8,10 +8,13 @@ import { Separator } from "../ui/separator";
 import { Upload } from "lucide-react";
 import { uploadBackground } from "@/actions/boardBackground";
 import { useBoardStore } from "@/store/boardStore";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
 const ThemeSetting = (props: Props) => {
+  const router = useRouter();
   const hiddenBackgroundInput = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState("Change Background");
   const [isPending, startTransition] = useTransition();
@@ -44,7 +47,13 @@ const ThemeSetting = (props: Props) => {
     }
 
     startTransition(async () => {
-      await uploadBackground(formData, boardBackground, user.id);
+      try {
+        await uploadBackground(formData, boardBackground, user.id);
+        toast.success("Background changed");
+        router.refresh();
+      } catch (err) {
+        console.error(err);
+      }
     });
 
     setFileName("Change Background");
