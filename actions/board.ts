@@ -11,6 +11,9 @@ import { Todoitem } from "@/lib/db/data/todoitem";
 import { Note } from "@/lib/db/data/note";
 import { File } from "@/lib/db/data/file";
 
+// NOTE: There is something wrong I think with this save handling
+// There are some notes when I logout, it didn't saved to the database
+
 export const saveBoardToDatabaseHandler = async (
   notes: NoteType[],
   todolist: TodolistType,
