@@ -16,7 +16,7 @@ const ProgressList = [
     num: 1,
     feature: "File management. For user to look their finished boards.",
     status: "Progress",
-    date: "April 2024",
+    date: "-",
   },
   {
     num: 2,
