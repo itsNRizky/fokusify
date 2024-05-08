@@ -4,6 +4,7 @@ import React, { FC, useState } from "react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { CgMenuRight } from "react-icons/cg";
+import Link from "next/link";
 
 type Props = {
   className?: string;
@@ -23,26 +24,19 @@ const NavHeader: FC<Props> = ({ className, type }) => {
           <SheetContent side={"top"} className="pt-14">
             <ul className="text-right">
               <li>
-                <a href="/login">
+                <Link href="/login">
                   <Button variant={"link"}>Login</Button>
-                </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="mailto:its.nrizky@gmail.com">
+                  <Button variant={"link"}>Contact</Button>
+                </Link>
               </li>
             </ul>
           </SheetContent>
         </Sheet>
-      ) : (
-        <ul className="flex items-center justify-between">
-          <li>
-            <Button variant={"link"}>Get Started</Button>
-          </li>
-          <li>
-            <Button variant={"link"}>Pricing</Button>
-          </li>
-          <li>
-            <Button variant={"link"}>About</Button>
-          </li>
-        </ul>
-      )}
+      ) : null}
     </nav>
   );
 };
