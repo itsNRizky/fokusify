@@ -51,6 +51,7 @@ const CreateTodoitemForm: FC<Props> = () => {
       userId: user.id,
     };
     setTodoitems([...todoitems, createdTodoitem as TodoitemType]);
+    setInputTodoItem("");
     setIsPending(false);
   };
 
@@ -104,8 +105,14 @@ const CreateTodoitemForm: FC<Props> = () => {
                 placeholder="Type new task..."
                 value={inputTodoItem}
                 onInput={(e) => setInputTodoItem(e.currentTarget.value)}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") {
+                    addTodoitemHandler();
+                  }
+                }}
               />
               <Button
+                type="submit"
                 variant="default"
                 disabled={isPending}
                 className=""

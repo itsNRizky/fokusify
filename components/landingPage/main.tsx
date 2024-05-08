@@ -6,6 +6,7 @@ import Customizable from "./customizable";
 import Progress from "./progress";
 import MobileFriendly from "./mobileFriendly";
 import Cta from "./cta";
+import ContactMe from "./contactMe";
 
 type Props = {
   className: string;
@@ -20,6 +21,7 @@ const Main: FC<Props> = ({ className }) => {
       <MobileFriendly />
       <Customizable />
       <Progress />
+      <ContactMe />
       <Cta />
     </main>
   );

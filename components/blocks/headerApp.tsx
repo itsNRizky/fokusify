@@ -1,17 +1,19 @@
 "use client";
 
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useTransition } from "react";
 import { Button } from "../ui/button";
 import { AiOutlineMenu } from "react-icons/ai";
-import { IoSettingsOutline } from "react-icons/io5";
+import { IoSaveOutline } from "react-icons/io5";
+import { IoMailOutline } from "react-icons/io5";
 import { useBoardStore } from "@/store/boardStore";
 import { type User as UserType } from "@prisma/client";
 import { type Theme as ThemeType } from "@prisma/client";
 import ProfileLogout from "./profileLogout";
 import { useThemeStore } from "@/store/themeStore";
-import { Popover, PopoverTrigger } from "../ui/popover";
-import { PopoverContent } from "@radix-ui/react-popover";
 import ThemeSetting from "./themeSetting";
+import { saveBoardToDatabaseHandler } from "@/actions/board";
+import { toast } from "sonner";
+import InboxForm from "./inboxForm";
 
 type Props = {
   className?: string;
@@ -20,7 +22,14 @@ type Props = {
 };
 
 const HeaderApp: FC<Props> = ({ className, userProp, themeProp }) => {
-  const [file] = useBoardStore((state) => [state.file]);
+  const [isPending, startTransition] = useTransition();
+  const [file, notes, todolist, todoitems] = useBoardStore((state) => [
+    state.file,
+    state.notes,
+    state.todolist,
+    state.todoitems,
+  ]);
+
   const [style, boardBackground, setStyle, setBoardBackground] = useThemeStore(
     (state) => [
       state.style,
@@ -39,11 +48,22 @@ const HeaderApp: FC<Props> = ({ className, userProp, themeProp }) => {
     setBoardBackground,
     themeProp.boardBackground,
   ]);
+
+  const saveHandler = () => {
+    startTransition(async () => {
+      toast("Saving your progress");
+      await saveBoardToDatabaseHandler(notes, todolist, todoitems, file);
+      toast("Your progress has been saved");
+    });
+  };
   return (
     <header className={className}>
       <nav className="flex items-center justify-between p-4">
         <div className="flex items-center gap-2">
           <Button
+            onClick={() => {
+              toast("This feature still on progress, thank you for waiting!");
+            }}
             variant={style === "LIGHT" ? "secondary" : "default"}
             size={"icon"}
           >
@@ -54,6 +74,19 @@ const HeaderApp: FC<Props> = ({ className, userProp, themeProp }) => {
           </h2>
         </div>
         <ul className="flex items-center gap-2">
+          <li>
+            <InboxForm />
+          </li>
+          <li>
+            <Button
+              disabled={isPending}
+              onClick={saveHandler}
+              variant={style === "LIGHT" ? "secondary" : "default"}
+              size={"icon"}
+            >
+              <IoSaveOutline />
+            </Button>
+          </li>
           <li>
             <ThemeSetting />
           </li>

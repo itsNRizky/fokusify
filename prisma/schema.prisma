@@ -113,3 +113,9 @@ model Theme {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model Inbox {
+  id          String @id @default(cuid())
+  email       String
+  message     String
+}
