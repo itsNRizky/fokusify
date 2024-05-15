@@ -4,7 +4,6 @@ import React, { FC, useEffect, useTransition } from "react";
 import { Button } from "../ui/button";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IoSaveOutline } from "react-icons/io5";
-import { IoMailOutline } from "react-icons/io5";
 import { useBoardStore } from "@/store/boardStore";
 import { type User as UserType } from "@prisma/client";
 import { type Theme as ThemeType } from "@prisma/client";
@@ -69,9 +68,7 @@ const HeaderApp: FC<Props> = ({ className, userProp, themeProp }) => {
           >
             <AiOutlineMenu />
           </Button>
-          <h2 style={{ color: style === "LIGHT" ? "black" : "white" }}>
-            {file.name}
-          </h2>
+          <h2>{file.name}</h2>
         </div>
         <ul className="flex items-center gap-2">
           <li>

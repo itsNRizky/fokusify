@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "../ui/button";
+import PwaInstall from "./pwaInstall";
 
 type Props = {};
 
@@ -14,9 +15,12 @@ const Hero = (props: Props) => {
         Fokusify is a productivity app that helps you stay focused on your
         tasks. Not the board. Personalized your board with your daily tasks.
       </p>
-      <a className="m-auto" href="/register">
-        <Button size={"lg"}>Try now for free</Button>
-      </a>
+      <div className="m-auto space-x-5">
+        <PwaInstall />
+        <a className="m-auto" href="/register">
+          <Button variant={"secondary"}>Try now on browser</Button>
+        </a>
+      </div>
     </section>
   );
 };

@@ -96,10 +96,11 @@ const CreateFileForm: FC<Props> = ({ className, userId }) => {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Input your file name" {...field} />
+                  <Input placeholder="Input your board name" {...field} />
                 </FormControl>
                 <FormDescription>
-                  File would be the the place to store your productivity items
+                  Board would be the the place to store your notes, todolist,
+                  etc...
                 </FormDescription>
                 <FormMessage />
               </FormItem>

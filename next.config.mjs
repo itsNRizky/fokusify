@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
+import nextPWA from "next-pwa";
 const nextConfig = {
+  reactStrictMode: true,
   webpack(config, options) {
     config.module.rules.push({
       test: /\.(mp3)$/,
@@ -18,4 +20,10 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+const withPwa = nextPWA({
+  dest: "public",
+  register: true,
+  disable: process.env.NODE_ENV === "development",
+});
+
+export default withPwa(nextConfig);
