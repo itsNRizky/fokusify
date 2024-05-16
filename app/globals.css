@@ -2,6 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  --sb-track-color: #e6e6e6;
+  --sb-thumb-color: #ababab;
+  --sb-size: 6px;
+}
+
+*::-webkit-scrollbar {
+  width: var(--sb-size);
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 3px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

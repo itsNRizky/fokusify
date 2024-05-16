@@ -27,7 +27,7 @@ const TodolistCard: FC<Props> = ({ todolist, todoitems, className }) => {
 
   return (
     <DraggableCard
-      className={`${className} w-72 ${todolist.visible ? "" : "hidden"}`}
+      className={`${className} w-72 ${todolist.visible ? "" : "hidden"} max-h-[80vh] overflow-y-auto`}
       draggableId={todolist.id}
       key={todolist.id}
     >
