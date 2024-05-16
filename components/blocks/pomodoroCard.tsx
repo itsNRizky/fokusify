@@ -143,6 +143,8 @@ const PomodoroCard = (props: Props) => {
   const seconds = timeLeft % 60;
   return (
     <DraggableCard
+      initX={0}
+      initY={0}
       className={`w-72 px-4 ${showPomodoro ? "" : "hidden"}`}
       draggableId="timer"
       key={"timer"}

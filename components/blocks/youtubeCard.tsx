@@ -29,6 +29,8 @@ const YoutubeCard = (props: Props) => {
   };
   return (
     <DraggableCard
+      initX={0}
+      initY={0}
       className={`w-80 ${showYoutube ? "" : "hidden"}`}
       key={"youtube"}
       draggableId="youtube"
