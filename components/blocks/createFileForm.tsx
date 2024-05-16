@@ -19,6 +19,7 @@ import { fileFormSchema } from "@/schemas";
 import { useBoardStore } from "@/store/boardStore";
 import { useRouter } from "next/navigation";
 import { useThemeStore } from "@/store/themeStore";
+import { randomInteger } from "@/lib/utils";
 
 type Props = {
   className: string;
@@ -45,7 +46,13 @@ const CreateFileForm: FC<Props> = ({ className, userId }) => {
       userId: "",
     });
     setNotes([]);
-    setTodolist({ id: "", visible: false, fileId: "" });
+    setTodolist({
+      id: "",
+      visible: false,
+      fileId: "",
+      xAxis: 0,
+      yAxis: 0,
+    });
     setTodoitems([]);
   }, [setFile, setNotes, setTodolist, setTodoitems]);
 
@@ -71,6 +78,8 @@ const CreateFileForm: FC<Props> = ({ className, userId }) => {
         id: cuid(),
         visible: false,
         fileId: createdFile.id,
+        xAxis: randomInteger(0, 50),
+        yAxis: randomInteger(0, 50),
       };
 
       setFile(createdFile);

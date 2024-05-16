@@ -1,4 +1,4 @@
-import React, { FC, useState, useTransition } from "react";
+import React, { FC, useTransition } from "react";
 import { Button } from "../ui/button";
 import {
   HoverCard,
@@ -7,11 +7,10 @@ import {
 } from "../ui/hover-card";
 import { FaRegNoteSticky } from "react-icons/fa6";
 import { useBoardStore } from "@/store/boardStore";
-import { Note } from "@/lib/db/data/note";
 import { type Note as NoteType } from "@prisma/client";
-import { create } from "@/actions/note";
 import cuid from "cuid";
 import { useThemeStore } from "@/store/themeStore";
+import { randomInteger } from "@/lib/utils";
 
 type Props = {};
 
@@ -56,7 +55,3 @@ const AddNoteButton: FC<Props> = (props: Props) => {
 };
 
 export default AddNoteButton;
-
-const randomInteger = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
