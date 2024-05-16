@@ -18,6 +18,8 @@ export const create = async (
   });
   const todolistId = await Todolist.create({
     fileId: createdFile?.id!,
+    xAxis: 0,
+    yAxis: 0,
   });
   redirect("/app");
 };
