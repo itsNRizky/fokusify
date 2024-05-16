@@ -5,9 +5,13 @@ export const Todolist = {
   create: async ({
     fileId,
     id,
+    xAxis,
+    yAxis,
   }: {
     id?: string;
     fileId: string;
+    xAxis: number;
+    yAxis: number;
   }): Promise<TodolistType | null> => {
     try {
       const createdTodolist = await db.todolist.create({
@@ -15,6 +19,8 @@ export const Todolist = {
           id: id,
           visible: false,
           fileId: fileId,
+          xAxis: xAxis,
+          yAxis: yAxis,
         },
       });
       return createdTodolist;
@@ -35,6 +41,22 @@ export const Todolist = {
     } catch (err) {
       console.log(err);
       return null;
+    }
+  },
+
+  updateCoordinates: async (id: string, xAxis: number, yAxis: number) => {
+    try {
+      await db.todolist.update({
+        where: {
+          id: id,
+        },
+        data: {
+          xAxis: xAxis,
+          yAxis: yAxis,
+        },
+      });
+    } catch (err) {
+      console.log(err);
     }
   },
 

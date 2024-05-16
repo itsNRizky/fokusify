@@ -39,6 +39,8 @@ export const saveBoardToDatabaseHandler = async (
             id: note.id,
             value: note.value || "",
             fileId: file.id,
+            xAxis: note.xAxis,
+            yAxis: note.yAxis,
           });
         }
       });
@@ -52,7 +54,19 @@ export const saveBoardToDatabaseHandler = async (
             await Note.delete(dbNote.id);
           } else if (storeNote.value !== dbNote.value) {
             // if the note is in the store but the value is different, update it
-            await Note.update({ ...dbNote, value: storeNote.value });
+            await Note.update({
+              ...dbNote,
+              value: storeNote.value,
+              xAxis: storeNote.xAxis,
+              yAxis: storeNote.yAxis,
+            });
+          } else {
+            // if the note is in the store and the value is the same, update the coordinates
+            await Note.update({
+              ...dbNote,
+              xAxis: storeNote.xAxis,
+              yAxis: storeNote.yAxis,
+            });
           }
         });
       }
@@ -64,6 +78,22 @@ export const saveBoardToDatabaseHandler = async (
         // if the visibility is different, update it
         try {
           await Todolist.setVisibility(todolist.id, todolist.visible);
+          await Todolist.updateCoordinates(
+            todolist.id,
+            todolist.xAxis,
+            todolist.yAxis,
+          );
+        } catch (err) {
+          console.error(err);
+        }
+      } else {
+        // if the visibility is the same, update the coordinates
+        try {
+          await Todolist.updateCoordinates(
+            todolist.id,
+            todolist.xAxis,
+            todolist.yAxis,
+          );
         } catch (err) {
           console.error(err);
         }

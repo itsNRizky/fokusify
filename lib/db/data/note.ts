@@ -6,10 +6,14 @@ export const Note = {
     id,
     value,
     fileId,
+    xAxis,
+    yAxis,
   }: {
     id?: string;
     value: string;
     fileId: string;
+    xAxis: number;
+    yAxis: number;
   }): Promise<NoteType | null> => {
     try {
       const createdNote = await db.note.create({
@@ -17,6 +21,8 @@ export const Note = {
           id: id,
           value: value,
           fileId: fileId,
+          xAxis: xAxis,
+          yAxis: yAxis,
         },
       });
       return createdNote;
