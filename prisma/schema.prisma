@@ -68,6 +68,8 @@ model Note {
   id            String @id @default(cuid())
   value         String?
   fileId        String
+  xAxis         Int    @default(0)
+  yAxis         Int    @default(0)
 
   file File @relation(fields: [fileId], references: [id], onDelete: Cascade)
 }
@@ -77,6 +79,8 @@ model Todolist {
   visible       Boolean
   fileId        String @unique
   todoitems     Todoitem[]
+  xAxis         Int    @default(0)
+  yAxis         Int    @default(0)
 
   file File @relation(fields: [fileId], references: [id], onDelete: Cascade)
 }

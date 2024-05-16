@@ -37,6 +37,8 @@ const NoteCard: FC<Props> = ({ draggableId, note, className }) => {
   };
   return (
     <DraggableCard
+      initX={note.xAxis}
+      initY={note.yAxis}
       className={`${className} w-60`}
       key={note.id}
       draggableId={draggableId}

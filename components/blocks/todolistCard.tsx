@@ -29,6 +29,8 @@ const TodolistCard: FC<Props> = ({ todolist, todoitems, className }) => {
     <DraggableCard
       className={`${className} w-72 ${todolist.visible ? "" : "hidden"} max-h-[80vh] overflow-y-auto`}
       draggableId={todolist.id}
+      initX={todolist.xAxis}
+      initY={todolist.yAxis}
       key={todolist.id}
     >
       <div className="flex items-center justify-between">

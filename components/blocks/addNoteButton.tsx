@@ -30,6 +30,8 @@ const AddNoteButton: FC<Props> = (props: Props) => {
         id: cuid(),
         value: "",
         fileId: file.id,
+        xAxis: randomInteger(0, 50),
+        yAxis: randomInteger(0, 50),
       };
       setNotes([...notes, createdNote as NoteType]);
     });
@@ -54,3 +56,7 @@ const AddNoteButton: FC<Props> = (props: Props) => {
 };
 
 export default AddNoteButton;
+
+const randomInteger = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
