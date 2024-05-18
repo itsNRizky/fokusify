@@ -52,21 +52,28 @@ export const saveBoardToDatabaseHandler = async (
           if (!storeNote) {
             // if the note is not in the store, delete it from the database
             await Note.delete(dbNote.id);
-          } else if (storeNote.value !== dbNote.value) {
-            // if the note is in the store but the value is different, update it
-            await Note.update({
-              ...dbNote,
-              value: storeNote.value,
-              xAxis: storeNote.xAxis,
-              yAxis: storeNote.yAxis,
-            });
           } else {
-            // if the note is in the store and the value is the same, update the coordinates
-            await Note.update({
-              ...dbNote,
-              xAxis: storeNote.xAxis,
-              yAxis: storeNote.yAxis,
-            });
+            // if the note is in the store, update it
+
+            // update the coordinates if they are different
+            if (
+              storeNote.xAxis !== dbNote.xAxis ||
+              storeNote.yAxis !== dbNote.yAxis
+            ) {
+              await Note.update({
+                ...dbNote,
+                xAxis: storeNote.xAxis,
+                yAxis: storeNote.yAxis,
+              });
+            }
+
+            if (storeNote.value !== dbNote.value) {
+              // if the note is in the store but the value is different, update it
+              await Note.update({
+                ...dbNote,
+                value: storeNote.value,
+              });
+            }
           }
         });
       }

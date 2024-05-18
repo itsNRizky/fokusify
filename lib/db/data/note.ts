@@ -77,7 +77,11 @@ export const Note = {
           id: note.id,
         },
         data: {
+          id: note.id,
           value: note.value,
+          fileId: note.fileId,
+          xAxis: note.xAxis,
+          yAxis: note.yAxis,
         },
       });
       return updatedNote;
