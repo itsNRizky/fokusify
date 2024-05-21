@@ -19,11 +19,28 @@ export const File = {
           id: id,
           name: name,
           date: date,
-          finished: false,
+          active: true,
           userId: userId,
         },
       });
       return createdFile;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  },
+
+  getByUser: async (userId: string): Promise<FileType[] | null> => {
+    try {
+      const file = await db.file.findMany({
+        where: {
+          userId,
+        },
+        orderBy: {
+          date: "desc",
+        },
+      });
+      return file;
     } catch (err) {
       console.log(err);
       return null;
@@ -49,7 +66,7 @@ export const File = {
       const file = await db.file.findFirst({
         where: {
           userId,
-          finished: false,
+          active: true,
         },
         orderBy: {
           date: "desc",
@@ -62,14 +79,18 @@ export const File = {
     }
   },
 
-  finish: async (fileId: string): Promise<FileType | null> => {
+  update: async (file: FileType): Promise<FileType | null> => {
     try {
       const finishedFile = await db.file.update({
         where: {
-          id: fileId,
+          id: file.id,
         },
         data: {
-          finished: true,
+          id: file.id,
+          name: file.name,
+          date: file.date,
+          active: file.active,
+          userId: file.userId,
         },
       });
       return finishedFile;
@@ -78,4 +99,38 @@ export const File = {
       return null;
     }
   },
+
+  activate: async (fileId: string): Promise<FileType | null> => {
+    try {
+      const activatedFile = await db.file.update({
+        where: {
+          id: fileId,
+        },
+        data: {
+          active: true,
+        },
+      });
+      return activatedFile;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  },
+
+  // finish: async (fileId: string): Promise<FileType | null> => {
+  //   try {
+  //     const finishedFile = await db.file.update({
+  //       where: {
+  //         id: fileId,
+  //       },
+  //       data: {
+  //         finished: true,
+  //       },
+  //     });
+  //     return finishedFile;
+  //   } catch (err) {
+  //     console.log(err);
+  //     return null;
+  //   }
+  // },
 };

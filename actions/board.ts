@@ -27,6 +27,7 @@ export const saveBoardToDatabaseHandler = async (
     await Note.createMany(notes);
     await Todoitem.createMany(todoitems);
   } else {
+    await File.update(file);
     if (notes) {
       const dbNotes = await Note.getByFileId(file.id);
       const dbNoteIds = dbNotes ? dbNotes.map((note) => note.id) : [];

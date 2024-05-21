@@ -55,7 +55,8 @@ model File {
   id            String @id @default(cuid())
   name          String
   date          DateTime
-  finished      Boolean
+  // finished      Boolean
+  active        Boolean @default(false)
   userId        String
   notes         Note[]
   todolist      Todolist?

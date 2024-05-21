@@ -20,6 +20,7 @@ import { useBoardStore } from "@/store/boardStore";
 import { useRouter } from "next/navigation";
 import { useThemeStore } from "@/store/themeStore";
 import { randomInteger } from "@/lib/utils";
+import { type File as FileType } from "@prisma/client";
 
 type Props = {
   className: string;
@@ -37,12 +38,14 @@ const CreateFileForm: FC<Props> = ({ className, userId }) => {
       state.setTodoitems,
     ],
   );
+
+  // To make sure when creating new Board, the store is cleared
   useEffect(() => {
     setFile({
       id: "",
       name: "",
       date: new Date(),
-      finished: false,
+      active: true,
       userId: "",
     });
     setNotes([]);
@@ -66,11 +69,11 @@ const CreateFileForm: FC<Props> = ({ className, userId }) => {
 
   const submitHandlerr = async (data: z.infer<typeof fileFormSchema>) => {
     startTransition(() => {
-      const createdFile = {
+      const createdFile: FileType = {
         id: cuid(),
         name: data.name,
         date: new Date(),
-        finished: false,
+        active: true,
         userId: userId,
       };
 

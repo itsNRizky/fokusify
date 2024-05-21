@@ -13,6 +13,7 @@ import ThemeSetting from "./themeSetting";
 import { saveBoardToDatabaseHandler } from "@/actions/board";
 import { toast } from "sonner";
 import InboxForm from "./inboxForm";
+import MenuButton from "./menuButton";
 
 type Props = {
   className?: string;
@@ -59,15 +60,7 @@ const HeaderApp: FC<Props> = ({ className, userProp, themeProp }) => {
     <header className={className}>
       <nav className="flex items-center justify-between p-4">
         <div className="flex items-center gap-2">
-          <Button
-            onClick={() => {
-              toast("This feature still on progress, thank you for waiting!");
-            }}
-            variant={style === "LIGHT" ? "secondary" : "default"}
-            size={"icon"}
-          >
-            <AiOutlineMenu />
-          </Button>
+          <MenuButton style={style} />
           <h2>{file.name}</h2>
         </div>
         <ul className="flex items-center gap-2">

@@ -24,18 +24,30 @@ export const create = async (
   redirect("/app");
 };
 
-export const finishedFile = async (fileId: string) => {
-  const todolist = await Todolist.getByFileId(fileId);
-  const todoitems = await Todoitem.getByTodolistId(todolist?.id!);
-  const notFinishedTodoitems = todoitems?.filter(
-    (todoitem) => todoitem.finished === false,
-  );
-  notFinishedTodoitems?.forEach(async (todoitem) => {
-    await Todoitem.update({
-      ...todoitem,
-      todolistId: null,
-    });
-  });
-  await File.finish(fileId);
-  redirect("/app");
+// export const finishedFile = async (fileId: string) => {
+//   const todolist = await Todolist.getByFileId(fileId);
+//   const todoitems = await Todoitem.getByTodolistId(todolist?.id!);
+//   const notFinishedTodoitems = todoitems?.filter(
+//     (todoitem) => todoitem.finished === false,
+//   );
+//   notFinishedTodoitems?.forEach(async (todoitem) => {
+//     await Todoitem.update({
+//       ...todoitem,
+//       todolistId: null,
+//     });
+//   });
+//   await File.finish(fileId);
+//   redirect("/app");
+// };
+
+export const getByUser = async (userId: string) => {
+  return File.getByUser(userId);
+};
+
+export const getFileById = async (fileId: string) => {
+  return File.getById(fileId);
+};
+
+export const activateFile = async (fileId: string) => {
+  await File.activate(fileId);
 };
