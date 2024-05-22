@@ -30,30 +30,32 @@ const MenuBoard: React.FC<Props> = ({ files }) => {
     state.file,
   ]);
 
-  const saveAndClearBoardHandler = () => {
-    startTransition(async () => {
-      toast("Saving your progress first...");
-      const oldFile: FileType = {
-        ...file,
-        active: false,
-      };
-      await saveBoardToDatabaseHandler(notes, todolist, todoitems, oldFile);
-      toast("Your progress has been saved");
-    });
+  const saveAndClearBoardHandler = async () => {
+    toast("Saving your progress first...");
+    const oldFile: FileType = {
+      ...file,
+      active: false,
+    };
+    await saveBoardToDatabaseHandler(notes, todolist, todoitems, oldFile);
+    toast("Your progress has been saved");
     useBoardStore.persist.clearStorage();
   };
 
   const newBoardHandler = () => {
-    saveAndClearBoardHandler();
-    toast("Creating new board...");
-    window.location.reload();
+    startTransition(async () => {
+      await saveAndClearBoardHandler();
+      toast("Creating new board...");
+      window.location.reload();
+    });
   };
 
   const changeBoardHandler = async (fileId: string) => {
-    saveAndClearBoardHandler();
-    toast("Changing board...");
-    await activateFile(fileId);
-    window.location.reload();
+    startTransition(async () => {
+      await saveAndClearBoardHandler();
+      toast("Changing board...");
+      await activateFile(fileId);
+      window.location.reload();
+    });
   };
 
   const fileList = (files: FileType[]) => {
