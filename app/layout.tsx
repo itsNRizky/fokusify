@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 const APP_NAME = "Fokusify";
-const APP_DEFAULT_TITLE = "Fokusfy";
+const APP_DEFAULT_TITLE = "Fokusify";
 const APP_TITLE_TEMPLATE = "%s - App";
 const APP_DESCRIPTION = "";
 

@@ -14,9 +14,9 @@ type Props = {};
 const ProgressList = [
   {
     num: 1,
-    feature: "File management. For user to look their finished boards.",
-    status: "Progress",
-    date: "-",
+    feature: "File management. For user to look their other boards.",
+    status: "Aired",
+    date: "23 May 2024",
   },
   {
     num: 2,

@@ -60,10 +60,11 @@ const MenuBoard: React.FC<Props> = ({ files }) => {
 
   const fileList = (files: FileType[]) => {
     if (files.length === 0) {
-      return <p>No files found</p>;
+      return <p>Loading...</p>;
     }
     return files.map((file) => (
       <DropdownMenuItem
+        disabled={isPending}
         className="cursor-pointer"
         onClick={() => changeBoardHandler(file.id)}
         key={file.id}
@@ -77,7 +78,7 @@ const MenuBoard: React.FC<Props> = ({ files }) => {
     <>
       <DropdownMenuLabel>Board</DropdownMenuLabel>
       <DropdownMenuGroup>
-        <DropdownMenuItem onClick={newBoardHandler}>
+        <DropdownMenuItem disabled={isPending} onClick={newBoardHandler}>
           <Plus className="mr-2 h-4 w-4" />
           <span>New Board</span>
         </DropdownMenuItem>
